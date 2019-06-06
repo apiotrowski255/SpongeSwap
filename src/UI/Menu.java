@@ -296,6 +296,8 @@ public class Menu extends Entity {
 						
 						System.out.println("Player has pressed enter : start the attack animation");
 						menuComponent.get(1).setSpeed(0);
+						float value = menuComponent.get(1).getX();
+						System.out.println(value);
 						ArrayList<Texture> frames = new ArrayList<Texture>();
 						frames.add(Shapes.LoadTexture("res/" + "fight_animation_f" + 1 + ".png", "PNG"));
 						frames.add(Shapes.LoadTexture("res/" + "fight_animation_f" + 2 + ".png", "PNG"));
@@ -303,9 +305,29 @@ public class Menu extends Entity {
 						frames.add(Shapes.LoadTexture("res/" + "fight_animation_f" + 4 + ".png", "PNG"));
 						frames.add(Shapes.LoadTexture("res/" + "fight_animation_f" + 5 + ".png", "PNG"));
 						frames.add(Shapes.LoadTexture("res/" + "fight_animation_f" + 6 + ".png", "PNG"));
+						
 						int size = 300;
+						float yPos = 100;
+						
+						if (value < 420){
+							size = 100;
+							yPos = 250;
+						} else if (value < 600){
+							size = 200;
+							yPos = 175;
+						} else if (value < 700){
+							size = 300;
+							yPos = 100;
+						} else if (value < 840){
+							size = 200;
+							yPos = 175;
+						} else {
+							size = 100;
+							yPos = 250;
+						} 
+						
 						float xPos = (DisplayManager.getWidth() - size)/2;
-						menuComponent.add(new FightAnimation(xPos, 100, size, size, 2, frames));
+						menuComponent.add(new FightAnimation(xPos, yPos, size, size, 2, frames));
 						
 						menuComponent.add(new Miss(510, 80, 32*7, 9*7));								// Spawn the Miss UI
 						

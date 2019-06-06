@@ -5,14 +5,14 @@ import java.util.ArrayList;
 import engineTester.Clock;
 import entities.Projectile;
 
-public class ExplosionProjectileSpawner {
+public class SingleExplosionProjectileSpawner {
 
 	public float x, y, delay;
 	public int numberOfProjectiles, projectileSize;
 	public ArrayList<Projectile> projectiles;
 	public boolean shoot;
 	
-	public ExplosionProjectileSpawner(float x, float y, float delay, int numberOfProjectiles, int projectileSize){
+	public SingleExplosionProjectileSpawner(float x, float y, float delay, int numberOfProjectiles, int projectileSize){
 		this.x = x;
 		this.y = y;
 		this.delay = delay;

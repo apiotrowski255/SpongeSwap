@@ -6,6 +6,7 @@ import java.util.Random;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Vector3f;
 
 import UI.Menu;
 import controllers.MasterProjectileController;
@@ -128,6 +129,11 @@ public class MasterTurnController {
 				if (turnCounter == 0){
 					masterProjectileController.addMulitSpiralProjectileSpawner(200, 675, 0f, 0f, 1f, 0, 0, 15f, 1);
 					this.pMask.Activate();
+				} else if (turnCounter == 1) {
+					masterProjectileController.addMulitSpiralProjectileSpawner(200, 675, 0f, 0f, 1f, 0, 0, 15f, 1);
+					masterProjectileController.addMulitSpiralProjectileSpawner(1000, 675, 0f, 0f, 1f, (float) Math.PI, 0, 15f, 1);
+					this.pMask.Activate();
+					this.player.setColor(new Vector3f(1,0,0));
 				} else if (turnCounter < 5) {
 					masterProjectileController.addExplosionProjectileSpawner(400, 400, 0, 20, 32);
 					masterProjectileController.addExplosionProjectileSpawner(400, 400, 10, 20, 32);
@@ -248,7 +254,7 @@ public class MasterTurnController {
 	public float distance(Player player, Projectile projectile){
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glColor3f(1, 1, 1);
-		Shapes.draw_line(player.getX() + player.size/2, player.getY()+player.size/2, projectile.getX()+projectile.size/2, projectile.getY()+projectile.size/2);
+		//Shapes.draw_line(player.getX() + player.size/2, player.getY()+player.size/2, projectile.getX()+projectile.size/2, projectile.getY()+projectile.size/2);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		float dx = player.getX() + player.size/2 - (projectile.getX()+projectile.size/2);
 		float dy = player.getY() + player.size/2 - (projectile.getY()+projectile.size/2);

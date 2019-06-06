@@ -9,13 +9,13 @@ public class MasterProjectileController {
 
 	public ArrayList<SingleSpiralProjectileSpawner> SpiralProjectileSpawners;
 	public ArrayList<MultiSpiralProjectileSpawner> MultiProjectileSpawners;
-	public ArrayList<ExplosionProjectileSpawner> ExplosionProjectileSpawners;
+	public ArrayList<SingleExplosionProjectileSpawner> SingleExplosionProjectileSpawners;
 	public ArrayList<JellyFish> JellyFishProjectiles;
 	
 	public MasterProjectileController(){
 		this.SpiralProjectileSpawners = new ArrayList<SingleSpiralProjectileSpawner>();
 		this.MultiProjectileSpawners = new ArrayList<MultiSpiralProjectileSpawner>();
-		this.ExplosionProjectileSpawners = new ArrayList<ExplosionProjectileSpawner>();
+		this.SingleExplosionProjectileSpawners = new ArrayList<SingleExplosionProjectileSpawner>();
 		this.JellyFishProjectiles = new ArrayList<JellyFish>();
 	}
 	
@@ -32,8 +32,8 @@ public class MasterProjectileController {
 	}
 	
 	public void addExplosionProjectileSpawner(float x, float y, float delay, int numberOfProjectiles, int projectileSize){
-		ExplosionProjectileSpawner explosionProjectileSpawner = new ExplosionProjectileSpawner(x, y, delay, numberOfProjectiles, projectileSize);
-		ExplosionProjectileSpawners.add(explosionProjectileSpawner);
+		SingleExplosionProjectileSpawner explosionProjectileSpawner = new SingleExplosionProjectileSpawner(x, y, delay, numberOfProjectiles, projectileSize);
+		SingleExplosionProjectileSpawners.add(explosionProjectileSpawner);
 	}
 	
 	
@@ -44,7 +44,7 @@ public class MasterProjectileController {
 	}
 	
 	public void ExplosionProjectileSpawnersUpdate(){
-		for (ExplosionProjectileSpawner s : ExplosionProjectileSpawners){
+		for (SingleExplosionProjectileSpawner s : SingleExplosionProjectileSpawners){
 			s.update();
 		}
 	}
@@ -85,7 +85,7 @@ public class MasterProjectileController {
 	public void clearSpawners(){
 		SpiralProjectileSpawners.clear();
 		MultiProjectileSpawners.clear();
-		ExplosionProjectileSpawners.clear();
+		SingleExplosionProjectileSpawners.clear();
 	}
 	
 	public ArrayList<SingleSpiralProjectileSpawner> getSpiralProjectileSpawners(){
@@ -110,7 +110,7 @@ public class MasterProjectileController {
 			}
 		}
 		
-		for (ExplosionProjectileSpawner s : ExplosionProjectileSpawners){
+		for (SingleExplosionProjectileSpawner s : SingleExplosionProjectileSpawners){
 			for (Projectile p : s.getProjectiles()){
 				projectiles.add(p);
 			}

@@ -105,11 +105,11 @@ public class Player extends Entity {
 			return;
 			// handled by the menu class, (in the menu class it sets the position of the player)
 		} else if (this.mode == GAMEOVER){
-			System.out.println(this.size);
+			//System.out.println(this.size);
 			if (timeDelay > 20){
 				timeDelay = 0;
-				setTexture("broken_heart");
-				this.extention = 25;
+				setTexture("heart_broken");
+				this.extention = 8;
 				System.out.println("Insert death animation here");
 			}
 			

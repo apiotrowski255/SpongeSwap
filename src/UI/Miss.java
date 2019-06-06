@@ -19,6 +19,8 @@ public class Miss extends Entity{
 	
 	public float timer;
 	
+	public float ySpeed, yAcceleration;
+	
 	public Miss(float x, float y, int width, int height) {
 		super(x, y);
 		this.width = width;
@@ -26,6 +28,8 @@ public class Miss extends Entity{
 		this.texture = Shapes.LoadTexture("res/"+"miss"+".png", "PNG");
 		this.active = false;
 		this.timer = 0;
+		this.ySpeed = -2f;
+		this.yAcceleration = 0.1f;
 	}
 
 	@Override
@@ -39,13 +43,24 @@ public class Miss extends Entity{
 
 	@Override
 	public void update() {
-		System.out.println(timer);
-		if (timer > 12){
+		//System.out.println(timer);
+		if (timer > 10){
 			activate();
 			timer = 0;
+		} else {
+			timer += Clock.Delta();
 		}
 		
-		timer += Clock.Delta();
+		if (active){
+			super.setY(super.getY() + ySpeed);
+			this.ySpeed += this.yAcceleration;
+			if (ySpeed > 2f){
+				ySpeed = 0;
+				yAcceleration = 0;
+			}
+		}
+		
+		
 	}
 	
 	public void activate(){
