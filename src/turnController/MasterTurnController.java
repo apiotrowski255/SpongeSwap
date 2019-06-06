@@ -112,6 +112,7 @@ public class MasterTurnController {
 				player.setHealth(92);
 				this.turn = PLAYERTURN;
 			}
+			return;
 		}
 		
 		if (turn == PLAYERTURN){

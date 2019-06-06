@@ -2,6 +2,8 @@ package entities;
 
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 
+import java.util.ArrayList;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
@@ -14,10 +16,10 @@ import shapes.Shapes;
 
 public class Player extends Entity {
 
-	private final int DOWN = 0;
-	private final int LEFT = 1;
-	private final int UP = 2;
-	private final int RIGHT = 3;
+	public final int DOWN = 0;
+	public final int LEFT = 1;
+	public final int UP = 2;
+	public final int RIGHT = 3;
 
 	public final int PLAYMODE = 0;
 	public final int MENUMODE = 1;
@@ -33,12 +35,18 @@ public class Player extends Entity {
 	public float gravity;
 	public boolean inAir, falling;
 	public int mode;
-	public float timeDelay;
+	
 	
 	public PlayerStats stats;
-	private int extention;
+	
 	
 	private boolean hide;
+	
+	
+	// items to handle death animation
+	private int extention;
+	public float timeDelay;
+	private ArrayList<PlayerBrokenBit> playerBrokenBits;
 
 	public Player(int x, int y, int size) {
 		super(x, y);
@@ -53,9 +61,11 @@ public class Player extends Entity {
 		this.gravityDirection = DOWN;
 		this.mode = MENUMODE;
 		this.stats = new PlayerStats();
+		this.hide = false;
+		
 		this.timeDelay = 0;
 		this.extention = 0;
-		this.hide = false;
+		this.playerBrokenBits = new ArrayList<PlayerBrokenBit>();
 	}
 	
 	public void init(){
@@ -69,7 +79,7 @@ public class Player extends Entity {
 		GL11.glEnable(GL_TEXTURE_2D);
 		GL11.glColor3f(color.x, color.y, color.z);
 
-		Shapes.DrawQuadTexRot(texture, super.getX(), super.getY(), size + extention, size, gravityDirection * 90);
+		Shapes.DrawQuadTexRot(texture, super.getX()-extention/2, super.getY(), size + extention, size, gravityDirection * 90);
 	}
 
 	
@@ -105,12 +115,24 @@ public class Player extends Entity {
 			return;
 			// handled by the menu class, (in the menu class it sets the position of the player)
 		} else if (this.mode == GAMEOVER){
-			//System.out.println(this.size);
-			if (timeDelay > 20){
-				timeDelay = 0;
+			if (timeDelay > 40 && hide == false){
+				int i = 0;
+				while (i < 5){
+					playerBrokenBits.add(new PlayerBrokenBit(super.getX(), super.getY(), "bubble2", (float) (Math.random()*4-2), (float) (Math.random()*-4+1), 1f, this.color));
+					i += 1;
+				}
+				
+				this.hide = true;
+				
+			} else if (timeDelay > 20){
 				setTexture("heart_broken");
 				this.extention = 8;
-				System.out.println("Insert death animation here");
+				//System.out.println("Insert death animation here");
+			}
+
+			for (PlayerBrokenBit b : playerBrokenBits){
+				b.update();
+				b.render();
 			}
 			
 			timeDelay += Clock.Delta();

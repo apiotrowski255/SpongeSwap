@@ -22,7 +22,7 @@ public class Background extends Entity{
 	}
 
 	public void update() {
-		
+
 	}
 
 }
