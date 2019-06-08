@@ -3,6 +3,7 @@ package entities;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
@@ -117,8 +118,10 @@ public class Player extends Entity {
 		} else if (this.mode == GAMEOVER){
 			if (timeDelay > 40 && hide == false){
 				int i = 0;
-				while (i < 5){
-					playerBrokenBits.add(new PlayerBrokenBit(super.getX(), super.getY(), "bubble2", (float) (Math.random()*4-2), (float) (Math.random()*-4+1), 1f, this.color));
+				while (i < 6){
+					Random rn = new Random();
+					int bit = rn.nextInt(3) + 1;
+					playerBrokenBits.add(new PlayerBrokenBit(super.getX()+this.size/2, super.getY()+this.size/2, "playerBrokenBit"+bit, (float) (Math.random()*4-2), (float) (Math.random()*-4+1), 1f, this.color));
 					i += 1;
 				}
 				

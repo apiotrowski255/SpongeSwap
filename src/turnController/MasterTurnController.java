@@ -100,6 +100,7 @@ public class MasterTurnController {
 			//Clear everything
 			entities.clear();
 			clearProjectileSpawners();
+			this.pMask.Deactivate();
 			
 			// Add the player back in
 			player.setGameOverMode();							// Player will do the death animation	
