@@ -67,8 +67,7 @@ public class Menu extends Entity {
 		this.status = false; // false is player turn, when true it indicates
 								// that the player has made their move
 
-		this.buffer = AudioMaster.loadSound("audio/bounce.wav");
-		this.source = new Source();
+		
 
 		Font awtFont = new Font(Font.SERIF, Font.PLAIN, 48); // name, style
 																// (PLAIN, BOLD,
@@ -81,6 +80,10 @@ public class Menu extends Entity {
 		this.name = "Plankton";
 		this.menuComponent = new ArrayList<Entity>();
 		this.spongeBob = spongeBob;
+		
+		// Audio
+		this.buffer = AudioMaster.loadSound("audio/Swipe.wav");
+		this.source = new Source();
 	}
 
 	public void render() {
@@ -332,7 +335,7 @@ public class Menu extends Entity {
 						menuComponent.add(new Miss(510, 80, 32*7, 9*7));								// Spawn the Miss UI
 						
 						this.spongeBob.dodge();
-						
+						this.source.play(this.buffer);
 
 					} else {
 

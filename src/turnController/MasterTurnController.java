@@ -110,6 +110,8 @@ public class MasterTurnController {
 				entities.clear();
 				initStartEntities();
 				
+				// relive the player
+				player.relive();
 				player.setHealth(92);
 				this.turn = PLAYERTURN;
 			}
@@ -135,7 +137,7 @@ public class MasterTurnController {
 					masterProjectileController.addMulitSpiralProjectileSpawner(200, 675, 0f, 0f, 1f, 0, 0, 15f, 1);
 					masterProjectileController.addMulitSpiralProjectileSpawner(1000, 675, 0f, 0f, 1f, (float) Math.PI, 0, 15f, 1);
 					this.pMask.Activate();
-					this.player.setColor(new Vector3f(1,0,0));
+					//this.player.setColor(new Vector3f(1,0,0));
 				} else if (turnCounter < 5) {
 					masterProjectileController.addExplosionProjectileSpawner(400, 400, 0, 20, 32);
 					masterProjectileController.addExplosionProjectileSpawner(400, 400, 10, 20, 32);

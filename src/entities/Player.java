@@ -10,6 +10,8 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.opengl.Texture;
 
+import audio.AudioMaster;
+import audio.Source;
 import data.PlayerStats;
 import engineTester.Clock;
 import renderEngine.DisplayManager;
@@ -48,6 +50,13 @@ public class Player extends Entity {
 	private int extention;
 	public float timeDelay;
 	private ArrayList<PlayerBrokenBit> playerBrokenBits;
+	private boolean phase1;
+	
+	// Audio handlers
+	private int SoulShatterBuffer;
+	private int SoulSplitBuffer;
+	private Source source;
+	
 
 	public Player(int x, int y, int size) {
 		super(x, y);
@@ -64,9 +73,17 @@ public class Player extends Entity {
 		this.stats = new PlayerStats();
 		this.hide = false;
 		
+		
+		//Death handler
 		this.timeDelay = 0;
 		this.extention = 0;
 		this.playerBrokenBits = new ArrayList<PlayerBrokenBit>();
+		this.phase1 = false;
+		
+		// Audio
+		this.SoulShatterBuffer = AudioMaster.loadSound("audio/SOUL shatter.wav");
+		this.SoulSplitBuffer = AudioMaster.loadSound("audio/SOUL split.wav");
+		this.source = new Source();
 	}
 	
 	public void init(){
@@ -127,9 +144,14 @@ public class Player extends Entity {
 				
 				this.hide = true;
 				
-			} else if (timeDelay > 20){
+				// Play the SOUL shatter sfx
+				this.source.play(this.SoulShatterBuffer);
+				
+			} else if (timeDelay > 20 && phase1 == false){
 				setTexture("heart_broken");
 				this.extention = 8;
+				this.source.play(this.SoulSplitBuffer);
+				this.phase1 = true;
 				//System.out.println("Insert death animation here");
 			}
 
@@ -312,6 +334,14 @@ public class Player extends Entity {
 		this.xMaxBound = DisplayManager.getWidth() - size;
 		this.yMinBound = 0;
 		this.yMaxBound = DisplayManager.getHeight() - size;
+	}
+	
+	public void relive(){
+		this.timeDelay = 0;
+		this.extention = 0;
+		this.phase1 = false;
+		this.setTexture("heart");
+		this.playerBrokenBits.clear();
 	}
 
 	public void moveLeft() {

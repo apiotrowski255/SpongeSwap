@@ -32,7 +32,7 @@ public class MainGameLoop {
 		int buffer = AudioMaster.loadSound("audio/soundtrack.wav");
 		Source source = new Source();
 		// Play music
-		// source.play(buffer);
+		source.play(buffer);
 		
 		
 		MasterTurnController turnController = new MasterTurnController();
@@ -52,30 +52,9 @@ public class MainGameLoop {
 			//GL11.glLoadIdentity();
 			//GL11.glTranslatef(camera.getX(), camera.getY(), 0);
 			
-			
-			/*
-			for (Entity entity:entities){
-				entity.update();
-				entity.render();
-			}*/
 			Clock.update();
 			turnController.update();
-			
-			
-			
-			//entity_controller(entities);
-			//draw_lines(entities);
-			
-			
-			
-			
-			
-			// Sort of Debugging
-			//Shapes.draw_grid();
-			//System.out.println(entities.size());
-			
-			//Game Controllers
-			//menu.update();
+
 		}
 
 		//Sound cleanup
@@ -84,20 +63,6 @@ public class MainGameLoop {
 		
 		DisplayManager.closeDisplay();
 
-	}
-	
-
-	
-
-	
-	public static void draw_lines(ArrayList<Entity> entities){
-		Player player = (Player) entities.get(1);
-		
-		for (int i = 2; i < entities.size(); i++){
-			GL11.glDisable(GL11.GL_TEXTURE_2D);
-			GL11.glColor3f(1, 1, 1);
-			Shapes.draw_line(player.getX() + 16, player.getY()+16, entities.get(i).getX()+8, entities.get(i).getY()+8);
-		}
 	}
 	
 }
