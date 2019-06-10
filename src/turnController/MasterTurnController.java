@@ -9,6 +9,8 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
 import UI.Menu;
+import audio.AudioMaster;
+import audio.Source;
 import controllers.MasterProjectileController;
 import engineTester.Clock;
 import entities.Background;
@@ -48,6 +50,10 @@ public class MasterTurnController {
 	private float turnTimer;
 	private int turnCounter;
 	
+	// Soundtrack Audio
+	private int buffer = AudioMaster.loadSound("audio/soundtrack.wav");
+	private Source source = new Source();
+	
 	
 	public MasterTurnController(){
 		this.turn = PLAYERTURN;
@@ -79,7 +85,7 @@ public class MasterTurnController {
 		//entities.add(jf);
 		
 		this.turnCounter = 0;
-		
+		source.play(buffer);
 	}
 	
 	public void update(){
@@ -106,6 +112,9 @@ public class MasterTurnController {
 			player.setGameOverMode();							// Player will do the death animation	
 			entities.add(player);
 			
+			// stop the music
+			source.stop(buffer);
+			
 			if (Keyboard.isKeyDown(Keyboard.KEY_RETURN)){
 				entities.clear();
 				initStartEntities();
@@ -114,7 +123,11 @@ public class MasterTurnController {
 				player.relive();
 				player.setHealth(92);
 				this.turn = PLAYERTURN;
+				
+				// resume playing the music
+				source.play(buffer);
 			}
+			
 			return;
 		}
 		
@@ -139,8 +152,9 @@ public class MasterTurnController {
 					this.pMask.Activate();
 					//this.player.setColor(new Vector3f(1,0,0));
 				} else if (turnCounter < 5) {
-					masterProjectileController.addExplosionProjectileSpawner(400, 400, 0, 20, 32);
-					masterProjectileController.addExplosionProjectileSpawner(400, 400, 10, 20, 32);
+					//masterProjectileController.addExplosionProjectileSpawner(400, 400, 0, 20, 32);
+					//masterProjectileController.addExplosionProjectileSpawner(400, 400, 10, 20, 32);
+					this.player.setColor(new Vector3f(1,0,0));
 					int i = 0;
 					int limit = 20;
 					while (i < limit){
@@ -249,7 +263,7 @@ public class MasterTurnController {
 		for (int i = 0; i < projectiles.size(); i++){
 			float d = distance(player, projectiles.get(i));
 			if (2*d< projectiles.get(i).size + player.size){				// TODO fix collision (It's a bit weird)
-				System.out.println("hit");									// It seems to detect a collision when there isn't really one there.
+				//System.out.println("hit");									// It seems to detect a collision when there isn't really one there.
 				player.decrementHealth();
 			}
 		}

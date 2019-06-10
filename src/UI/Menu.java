@@ -35,8 +35,7 @@ public class Menu extends Entity {
 	public int mode;
 
 	public boolean status;
-	int buffer;
-	public Source source;
+	
 	private TrueTypeFont font;
 
 	private String name;
@@ -46,6 +45,11 @@ public class Menu extends Entity {
 	private float tmpTimer;
 	
 	private SpongeBob spongeBob;
+	
+	// Audio
+	int Attackbuffer, genericMenuSelectBuffer, menuSelectBuffer;
+	public Source source;
+	
 
 	public Menu(Player player, SpongeBob spongeBob) {
 		super(0, 0);
@@ -82,7 +86,9 @@ public class Menu extends Entity {
 		this.spongeBob = spongeBob;
 		
 		// Audio
-		this.buffer = AudioMaster.loadSound("audio/Swipe.wav");
+		this.Attackbuffer = AudioMaster.loadSound("audio/Swipe.wav");
+		this.genericMenuSelectBuffer = AudioMaster.loadSound("audio/generic menu selection.wav");
+		this.menuSelectBuffer = AudioMaster.loadSound("audio/Menu select.wav");
 		this.source = new Source();
 	}
 
@@ -132,9 +138,6 @@ public class Menu extends Entity {
 				changeSelect(1, menu_options.size());
 			}
 			if (Keyboard.isKeyDown(Keyboard.KEY_RETURN)) {
-				if (timeSinceLastPress > delay) {
-					timeSinceLastPress = 0;
-				}
 				if (selected == 0) {
 					this.subMenu_options.get(0).setCurrentText("SpongeBob");
 					this.menuController.add("SpongeBob");
@@ -156,7 +159,9 @@ public class Menu extends Entity {
 				}
 				mode = SUB;
 				selected = 0;
+				timeSinceLastPress = 0;
 				resetButtonSelected();
+				source.play(menuSelectBuffer);
 			}
 
 		} else if (mode == SUB) {
@@ -247,12 +252,13 @@ public class Menu extends Entity {
 				this.subMenu_options.add(new Typer(90, 525, "You feel..."));
 				this.menuController.clear();
 				selected = 0;
+				source.play(genericMenuSelectBuffer);
 			}
 
 			if (Keyboard.isKeyDown(Keyboard.KEY_RETURN)) {
 				//System.out.println(this.menuController);
 				if (timeSinceLastPress > delay) {
-					// Menu of Check
+					// checking the current menu state
 					if (this.menuController.equals(new ArrayList<String>() {
 						{
 							add("Check");
@@ -335,16 +341,17 @@ public class Menu extends Entity {
 						menuComponent.add(new Miss(510, 80, 32*7, 9*7));								// Spawn the Miss UI
 						
 						this.spongeBob.dodge();
-						this.source.play(this.buffer);
+						this.source.play(this.Attackbuffer);
 
 					} else {
 
-						System.out.println("fuck");
+						System.out.println("fuck, nothing matches the menu states");
 						setPlayerTurn();
 						return;
 					}
 					this.menuController.add("Enter");
 					timeSinceLastPress = 0;
+					source.play(menuSelectBuffer);
 				}
 			}
 			if (selected == 0) {
@@ -384,22 +391,9 @@ public class Menu extends Entity {
 				selected += size;
 			}
 			timeSinceLastPress = 0;
+			source.play(genericMenuSelectBuffer);
 		}
-
-	}
-
-	public void changeSelect(int direction) {
-		if (timeSinceLastPress > delay) {
-			selected += direction;
-			if (selected > 3) {
-				selected -= 4;
-			}
-			if (selected < 0) {
-				selected += 4;
-			}
-			timeSinceLastPress = 0;
-		}
-
+		
 	}
 
 	public boolean playerTurnCompleted() {

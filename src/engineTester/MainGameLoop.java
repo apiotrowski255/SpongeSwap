@@ -29,10 +29,10 @@ public class MainGameLoop {
 		//Sound setup
 		AudioMaster.init();
 		
-		int buffer = AudioMaster.loadSound("audio/soundtrack.wav");
-		Source source = new Source();
+		//int buffer = AudioMaster.loadSound("audio/soundtrack.wav");
+		//Source source = new Source();
 		// Play music
-		source.play(buffer);
+		//source.play(buffer);
 		
 		
 		MasterTurnController turnController = new MasterTurnController();
@@ -58,7 +58,7 @@ public class MainGameLoop {
 		}
 
 		//Sound cleanup
-		source.delete();
+		//source.delete();
 		AudioMaster.cleanUp();
 		
 		DisplayManager.closeDisplay();

@@ -46,7 +46,7 @@ public class SimpleAudioPlayer
     { 
         try
         { 
-            filePath = "C:/Users/Aweso/Desktop/workspace/test2/src/audio/bounce.wav"; 
+            filePath = "C:/Users/Aweso/Desktop/workspace/test2/src/audio/Soul shatter.wav"; 
             SimpleAudioPlayer audioPlayer =  
                             new SimpleAudioPlayer(); 
               
