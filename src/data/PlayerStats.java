@@ -4,20 +4,25 @@ import java.util.ArrayList;
 
 public class PlayerStats {
 
+	private final int MAXHEALTH = 92;
 	private int health;
 	private ArrayList<String> items;
 	
 	public PlayerStats(){
-		this.health = 92;
+		this.health = MAXHEALTH;
 		this.items = new ArrayList<String>();
 		init();
 	}
 	
 	public void init(){
 		// Add 8 crabby pattys
-		for (int i = 0; i < 8; i++){
+		for (int i = 0; i < 4; i++){
 			items.add("crabby patty");
 		}
+	}
+	
+	public ArrayList<String> getItems(){
+		return this.items;
 	}
 	
 	public void removeItem(){
@@ -33,6 +38,6 @@ public class PlayerStats {
 	}
 	
 	public void setHealth(int health){
-		this.health = health;
+		this.health = Math.min(health, MAXHEALTH);
 	}
 }

@@ -27,7 +27,8 @@ import shapes.Shapes;
 public class MasterTurnController {
 
 	private static final int PLAYERTURN = 0;
-	private static final int ENEMYTURN = 1;
+	private static final int MIDDLE = 1;
+	private static final int ENEMYTURN = 2;
 	
 	
 	public int playerAction;
@@ -134,15 +135,45 @@ public class MasterTurnController {
 		if (turn == PLAYERTURN){
 			// Switch to the enemy Turn
 			if (menu.playerTurnCompleted()){
-				this.turn = ENEMYTURN;
-				this.player.setPlayMode();
+				this.turn = MIDDLE;
+				this.player.disablePlayerMovement();
 				this.ps.setPlayerBounds();
 				this.menu.subMenu_options.get(0).hide();
 				ps.centerPlayerPosition();
 				ps.invokeTransition(DisplayManager.getWidth()/2 - 600/2, 550, 200, 600, 50);
-				System.out.println("It is now the enemy turn!");
+				System.out.println("It is now the middle turn!");
 															
-				this.turnTimer = 150;		// default of 15 second for enemy turn (15 seconds of dodging)
+				this.turnTimer = 50;		// default of 5 second for enemy turn (5 seconds of enemy talking)
+				
+				
+			} 
+			
+		} else if (turn == ENEMYTURN){
+			// Here the player will be dodging the projectiles spawned
+			
+			turnTimer -= Clock.Delta();
+			
+			// Switch back to the player turn
+			if (Keyboard.isKeyDown(Keyboard.KEY_C) || turnTimer <= 0){
+				gameSetPlayerTurn();
+			} else {
+				masterProjectileController.update();
+				detectCollision(player, masterProjectileController);
+			}
+		} else if (turn == MIDDLE){
+			// Here Insert the dialogue that spongebob will have
+			
+			// render the image of the player
+			this.player.show();
+			
+			turnTimer -= Clock.Delta();
+			
+			// Switch to the enemy turn (dodge projectiles)
+			if (Keyboard.isKeyDown(Keyboard.KEY_C) || turnTimer <= 0){
+				this.turn = ENEMYTURN;
+				this.turnTimer = 150;
+				this.player.setPlayMode();
+				
 				if (turnCounter == 0){
 					masterProjectileController.addMulitSpiralProjectileSpawner(200, 675, 0f, 0f, 1f, 0, 0, 15f, 1);
 					this.pMask.Activate();
@@ -150,10 +181,14 @@ public class MasterTurnController {
 					masterProjectileController.addMulitSpiralProjectileSpawner(200, 675, 0f, 0f, 1f, 0, 0, 15f, 1);
 					masterProjectileController.addMulitSpiralProjectileSpawner(1000, 675, 0f, 0f, 1f, (float) Math.PI, 0, 15f, 1);
 					this.pMask.Activate();
+					this.player.setGravityDirection(this.player.LEFT);
 					//this.player.setColor(new Vector3f(1,0,0));
+				} else if (turnCounter == 2){
+					masterProjectileController.addMulitSpiralProjectileSpawner(200, 675, 0f, 0f, 1f, 0, 0, 15f, 1);
+					masterProjectileController.addMulitSpiralProjectileSpawner(1000, 550, 0f, 0f, 1f, (float) Math.PI, 0, 15f, 1);
+					this.pMask.Activate();
 				} else if (turnCounter < 5) {
-					//masterProjectileController.addExplosionProjectileSpawner(400, 400, 0, 20, 32);
-					//masterProjectileController.addExplosionProjectileSpawner(400, 400, 10, 20, 32);
+					
 					this.player.setColor(new Vector3f(1,0,0));
 					int i = 0;
 					int limit = 20;
@@ -167,23 +202,8 @@ public class MasterTurnController {
 					masterProjectileController.addMulitSpiralProjectileSpawner(400, 400, 0f, 0f, 1f, 0f, 20, 1f, 2);
 					this.pMask.Deactivate();
 				}
-				
 			} 
 			
-		} else if (turn == ENEMYTURN){
-			// Here the player will be dodging the projectiles spawned
-			// render the image of the player
-			this.player.show();
-			
-			turnTimer -= Clock.Delta();
-			
-			// Switch back to the player turn
-			if (Keyboard.isKeyDown(Keyboard.KEY_C) || turnTimer <= 0){
-				gameSetPlayerTurn();
-			} else {
-				masterProjectileController.update();
-				detectCollision(player, masterProjectileController);
-			}
 		}
 
 		

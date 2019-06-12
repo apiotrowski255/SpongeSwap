@@ -27,7 +27,8 @@ public class Player extends Entity {
 	public final int PLAYMODE = 0;
 	public final int MENUMODE = 1;
 	public final int GAMEOVER = 2;
-
+	public final int DISABLE = 3;
+	
 	public int speed, size, gravityDirection;
 	public float direction;
 	public Texture texture;
@@ -108,67 +109,77 @@ public class Player extends Entity {
 		super.setY(clamp(super.getY(), yMinBound, yMaxBound));
 
 		if (this.mode == PLAYMODE) {
-
-			if (this.getColor().equals(new Vector3f(1, 0, 0))) {			// When player color is red
-				redMovement();
-			} else if (this.getColor().equals(new Vector3f(0, 0, 1))) {		// When player color is blue
-				blueMovement(gravityDirection);
-				
-				applyGravity(gravityDirection);								// Apply gravity
-
-				if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
-					setGravityDirection(UP);
-				}
-				if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
-					setGravityDirection(DOWN);
-				}
-				if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
-					setGravityDirection(LEFT);
-				}
-				if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
-					setGravityDirection(RIGHT);
-				}
-			}
+			playermovement();
 		} else if (this.mode == MENUMODE){
-			return;
 			// handled by the menu class, (in the menu class it sets the position of the player)
 		} else if (this.mode == GAMEOVER){
-			if (timeDelay > 40 && hide == false){
-				int i = 0;
-				while (i < 6){
-					Random rn = new Random();
-					int bit = rn.nextInt(3) + 1;
-					playerBrokenBits.add(new PlayerBrokenBit(super.getX()+this.size/2, super.getY()+this.size/2, "playerBrokenBit"+bit, (float) (Math.random()*4-2), (float) (Math.random()*-4+1), 1f, this.color));
-					i += 1;
-				}
-				
-				this.hide = true;
-				
-				// Play the SOUL shatter sfx
-				this.source.play(this.SoulShatterBuffer);
-				
-			} else if (timeDelay > 20 && phase1 == false){
-				setTexture("heart_broken");
-				this.extention = 8;
-				this.source.play(this.SoulSplitBuffer);
-				this.phase1 = true;
-				//System.out.println("Insert death animation here");
-			}
-
-			for (PlayerBrokenBit b : playerBrokenBits){
-				b.update();
-				b.render();
-			}
-			
-			timeDelay += Clock.Delta();
-			
-			return;
+			gameOverSequence();
 			// run the death animation
 			// Heart -> broken heart -> 5 random pieces
+		} else if (this.mode == DISABLE){
+			// Player is not responsive to keyboard events
+			if (this.getColor().equals(new Vector3f(0,0,1))){
+				applyGravity(gravityDirection);
+			}
 		}
 
 	}
+	
+	public void gameOverSequence(){
+		if (timeDelay > 40 && hide == false){
+			int i = 0;
+			while (i < 6){
+				Random rn = new Random();
+				int bit = rn.nextInt(3) + 1;
+				playerBrokenBits.add(new PlayerBrokenBit(super.getX()+this.size/2, super.getY()+this.size/2, "playerBrokenBit"+bit, (float) (Math.random()*4-2), (float) (Math.random()*-4+1), 1f, this.color));
+				i += 1;
+			}
+			
+			this.hide = true;
+			
+			// Play the SOUL shatter sfx
+			this.source.play(this.SoulShatterBuffer);
+			
+		} else if (timeDelay > 20 && phase1 == false){
+			setTexture("heart_broken");
+			this.extention = 8;
+			this.source.play(this.SoulSplitBuffer);
+			this.phase1 = true;
+			//System.out.println("Insert death animation here");
+		}
 
+		for (PlayerBrokenBit b : playerBrokenBits){
+			b.update();
+			b.render();
+		}
+		
+		timeDelay += Clock.Delta();
+	}
+
+	public void playermovement(){
+		if (this.getColor().equals(new Vector3f(1, 0, 0))) {			// When player color is red
+			redMovement();
+		} else if (this.getColor().equals(new Vector3f(0, 0, 1))) {		// When player color is blue
+			blueMovement(gravityDirection);
+			
+			applyGravity(gravityDirection);								// Apply gravity
+
+			// Allows for changing gravity direction
+			if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
+				setGravityDirection(UP);
+			}
+			if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
+				setGravityDirection(DOWN);
+			}
+			if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
+				setGravityDirection(LEFT);
+			}
+			if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
+				setGravityDirection(RIGHT);
+			}
+		}
+	}
+	
 	public void applyGravity(int gravityDirection) {
 		if (gravityDirection == DOWN) {
 			if (super.getY() <= yMaxBound) {
@@ -424,6 +435,10 @@ public class Player extends Entity {
 		this.mode = MENUMODE;
 	}
 	
+	public void disablePlayerMovement(){
+		this.mode = DISABLE;
+	}
+	
 	public void decrementHealth(){
 		this.stats.decrementHealth();
 	}
@@ -454,6 +469,10 @@ public class Player extends Entity {
 	
 	public void show(){
 		this.hide = false;
+	}
+	
+	public PlayerStats getStats(){
+		return this.stats;
 	}
 	
 }

@@ -47,7 +47,7 @@ public class Menu extends Entity {
 	private SpongeBob spongeBob;
 	
 	// Audio
-	int Attackbuffer, genericMenuSelectBuffer, menuSelectBuffer;
+	int Attackbuffer, genericMenuSelectBuffer, menuSelectBuffer, healSFXBuffer;
 	public Source source;
 	
 
@@ -89,6 +89,7 @@ public class Menu extends Entity {
 		this.Attackbuffer = AudioMaster.loadSound("audio/Swipe.wav");
 		this.genericMenuSelectBuffer = AudioMaster.loadSound("audio/generic menu selection.wav");
 		this.menuSelectBuffer = AudioMaster.loadSound("audio/Menu select.wav");
+		this.healSFXBuffer = AudioMaster.loadSound("audio/Heal.wav");
 		this.source = new Source();
 	}
 
@@ -114,7 +115,7 @@ public class Menu extends Entity {
 	}
 
 	public void update() {
-		if (player.mode == player.PLAYMODE) {
+		if (player.mode == player.PLAYMODE || player.mode == player.DISABLE) {
 			return;
 		}
 
@@ -124,45 +125,7 @@ public class Menu extends Entity {
 		}
 
 		if (mode == MAIN) {
-			// Update selected button
-			updateSelectedButton();
-
-			// Set the player position to be on the correct button
-			setPlayerPositionOnButton();
-
-			// Keyboard controls to change State
-			if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
-				changeSelect(-1, menu_options.size());
-			}
-			if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
-				changeSelect(1, menu_options.size());
-			}
-			if (Keyboard.isKeyDown(Keyboard.KEY_RETURN)) {
-				if (selected == 0) {
-					this.subMenu_options.get(0).setCurrentText("SpongeBob");
-					this.menuController.add("SpongeBob");
-				} else if (selected == 1) {
-					this.subMenu_options.get(0).setCurrentText("Check");
-					this.menuController.add("Check");
-				} else if (selected == 2) {
-					this.subMenu_options.get(0).setCurrentText("Crabby Patty");
-					this.subMenu_options.add(new Typer(600, 525, ""));
-					this.subMenu_options.get(1).setCurrentText("Crabby Patty");
-					this.subMenu_options.add(new Typer(90, 575, ""));
-					this.subMenu_options.get(2).setCurrentText("sandwich");
-					this.subMenu_options.add(new Typer(600, 575, ""));
-					this.subMenu_options.get(3).setCurrentText("cola");
-					this.menuController.add("Item");
-				} else if (selected == 3) {
-					this.subMenu_options.get(0).setCurrentText("Spare");
-					this.menuController.add("Spare");
-				}
-				mode = SUB;
-				selected = 0;
-				timeSinceLastPress = 0;
-				resetButtonSelected();
-				source.play(menuSelectBuffer);
-			}
+			mainMenuControl();
 
 		} else if (mode == SUB) {
 			// System.out.println(this.menuController);
@@ -177,7 +140,6 @@ public class Menu extends Entity {
 					this.menuController.add("Enter");
 				}
 				
-				//System.out.println(this.menuController);
 			} else if (this.menuController.equals(new ArrayList<String>() {						// A small pause for the fight animation
 				{
 					add("SpongeBob");
@@ -224,7 +186,6 @@ public class Menu extends Entity {
 					this.menuController.add("Enter");										// As if the player pressed enter
 				}
 			} 
-
 			// Keyboard controls
 			if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
 				changeSelect(-1, subMenu_options.size());
@@ -257,7 +218,7 @@ public class Menu extends Entity {
 
 			if (Keyboard.isKeyDown(Keyboard.KEY_RETURN)) {
 				//System.out.println(this.menuController);
-				if (timeSinceLastPress > delay) {
+				if (timeSinceLastPress > delay*2) {
 					// checking the current menu state
 					if (this.menuController.equals(new ArrayList<String>() {
 						{
@@ -306,7 +267,6 @@ public class Menu extends Entity {
 						System.out.println("Player has pressed enter : start the attack animation");
 						menuComponent.get(1).setSpeed(0);
 						float value = menuComponent.get(1).getX();
-						System.out.println(value);
 						ArrayList<Texture> frames = new ArrayList<Texture>();
 						frames.add(Shapes.LoadTexture("res/" + "fight_animation_f" + 1 + ".png", "PNG"));
 						frames.add(Shapes.LoadTexture("res/" + "fight_animation_f" + 2 + ".png", "PNG"));
@@ -343,9 +303,20 @@ public class Menu extends Entity {
 						this.spongeBob.dodge();
 						this.source.play(this.Attackbuffer);
 
+					} else if (this.menuController.equals(new ArrayList<String>() {
+						{
+							add("Item");
+						}
+					})) {
+						System.out.println("use the Item");
+						player.setHealth(player.getHealth()+42);
+						source.play(healSFXBuffer);
+						setPlayerTurn();
+						return;
 					} else {
 
 						System.out.println("fuck, nothing matches the menu states");
+						System.out.println(this.menuController);
 						setPlayerTurn();
 						return;
 					}
@@ -368,8 +339,55 @@ public class Menu extends Entity {
 				player.setX(565);
 			}
 		}
-
 		timeSinceLastPress += Clock.Delta();
+	}
+	
+	public void mainMenuControl(){
+		// Update selected button
+		updateSelectedButton();
+
+		// Set the player position to be on the correct button
+		setPlayerPositionOnButton();
+
+		// Keyboard controls to change State
+		if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
+			changeSelect(-1, menu_options.size());
+		}
+		if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
+			changeSelect(1, menu_options.size());
+		}
+		if (Keyboard.isKeyDown(Keyboard.KEY_RETURN)) {
+			if (selected == 0) {
+				this.subMenu_options.get(0).setCurrentText("SpongeBob");
+				this.menuController.add("SpongeBob");
+			} else if (selected == 1) {
+				this.subMenu_options.get(0).setCurrentText("Check");
+				this.menuController.add("Check");
+			} else if (selected == 2) {
+				this.subMenu_options.get(0).setCurrentText("Crabby Patty");
+				this.subMenu_options.add(new Typer(600, 525, ""));
+				this.subMenu_options.get(1).setCurrentText("Crabby Patty");
+				this.subMenu_options.add(new Typer(90, 575, ""));
+				this.subMenu_options.get(2).setCurrentText("sandwich");
+				this.subMenu_options.add(new Typer(600, 575, ""));
+				this.subMenu_options.get(3).setCurrentText("cola");
+				
+				ArrayList<String> playerItems = player.getStats().getItems();
+				for (int i = 0 ; i < playerItems.size(); i++){
+					this.subMenu_options.get(i).setCurrentText(playerItems.get(i));
+				}
+				
+				this.menuController.add("Item");
+			} else if (selected == 3) {
+				this.subMenu_options.get(0).setCurrentText("Spare");
+				this.menuController.add("Spare");
+			}
+			mode = SUB;
+			selected = 0;
+			timeSinceLastPress = 0;
+			resetButtonSelected();
+			source.play(menuSelectBuffer);
+		}
 	}
 
 	public void setPlayerTurn() {
