@@ -15,17 +15,18 @@ public class Typer extends Entity{
 	public float delay;
 	public int i;
 	public boolean hide;
+	public boolean renderStar;
 	
-	public Typer(float x, float y, String text) {
+	public Typer(float x, float y, int fontsize, String text) {
 		super(x, y);
 		this.text = text;
 		this.currentText = "";
 		this.delay = 1.0f;
 		this.i = 0;
 		this.hide = false;
+		this.renderStar = true;
 		
-		
-		Font awtFont = new Font(Font.SERIF, Font.PLAIN, 48); //name, style (PLAIN, BOLD, or ITALIC), size
+		Font awtFont = new Font(Font.SERIF, Font.PLAIN, fontsize); //name, style (PLAIN, BOLD, or ITALIC), size
 		this.font = new TrueTypeFont(awtFont, false); //base Font, anti-aliasing true/false
 	}
 
@@ -33,7 +34,9 @@ public class Typer extends Entity{
 	public void render() {
 		if (hide)
 			return;
-		font.drawString(super.getX()-30, super.getY()+10, "*", Color.white);		// magic numbers for alignment
+		if (renderStar){
+			font.drawString(super.getX()-30, super.getY()+10, "*", Color.white);		// magic numbers for alignment
+		}
 		font.drawString(super.getX(), super.getY(), this.currentText, Color.white);
 		
 	}
@@ -83,6 +86,10 @@ public class Typer extends Entity{
 	
 	public void show(){
 		this.hide = false;
+	}
+	
+	public void setRenderStar(boolean value){
+		this.renderStar = value;
 	}
 	
 }

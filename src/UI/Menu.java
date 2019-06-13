@@ -60,7 +60,7 @@ public class Menu extends Entity {
 		this.menu_options.add(new Button(256 * 2 + 32 * 5, 825, "item"));
 		this.menu_options.add(new Button(256 * 3 + 32 * 7, 825, "mercy"));
 		this.subMenu_options = new ArrayList<Typer>();
-		this.subMenu_options.add(new Typer(90, 525, "Are ya ready kids?"));
+		this.subMenu_options.add(new Typer(90, 525, 48, "Are ya ready kids?"));
 		this.menuController = new ArrayList<String>();
 		this.player = player;
 		this.timeSinceLastPress = 0;
@@ -126,7 +126,6 @@ public class Menu extends Entity {
 
 		if (mode == MAIN) {
 			mainMenuControl();
-
 		} else if (mode == SUB) {
 			// System.out.println(this.menuController);
 			// State Controls
@@ -210,7 +209,7 @@ public class Menu extends Entity {
 				} 
 				mode = MAIN;
 				this.subMenu_options.clear();
-				this.subMenu_options.add(new Typer(90, 525, "You feel..."));
+				this.subMenu_options.add(new Typer(90, 525, 48, "You feel..."));
 				this.menuController.clear();
 				selected = 0;
 				source.play(genericMenuSelectBuffer);
@@ -365,11 +364,11 @@ public class Menu extends Entity {
 				this.menuController.add("Check");
 			} else if (selected == 2) {
 				this.subMenu_options.get(0).setCurrentText("Crabby Patty");
-				this.subMenu_options.add(new Typer(600, 525, ""));
+				this.subMenu_options.add(new Typer(600, 525, 48, ""));
 				this.subMenu_options.get(1).setCurrentText("Crabby Patty");
-				this.subMenu_options.add(new Typer(90, 575, ""));
+				this.subMenu_options.add(new Typer(90, 575, 48, ""));
 				this.subMenu_options.get(2).setCurrentText("sandwich");
-				this.subMenu_options.add(new Typer(600, 575, ""));
+				this.subMenu_options.add(new Typer(600, 575, 48, ""));
 				this.subMenu_options.get(3).setCurrentText("cola");
 				
 				ArrayList<String> playerItems = player.getStats().getItems();
@@ -393,7 +392,7 @@ public class Menu extends Entity {
 	public void setPlayerTurn() {
 		status = true;
 		this.subMenu_options.clear();
-		this.subMenu_options.add(new Typer(90, 525, ""));
+		this.subMenu_options.add(new Typer(90, 525, 48, ""));
 		timeSinceLastPress = 0;
 		resetButtonSelected();
 		this.menuController.clear();

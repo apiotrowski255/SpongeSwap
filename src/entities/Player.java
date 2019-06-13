@@ -30,14 +30,15 @@ public class Player extends Entity {
 	public final int DISABLE = 3;
 	
 	public int speed, size, gravityDirection;
-	public float direction;
+
 	public Texture texture;
 	// bounds the player to an area of movement
 	public float xMinBound, xMaxBound, yMinBound, yMaxBound;
 	
+	// handle movement
 	public Vector3f color;
-	public float gravity;
-	public boolean inAir, falling;
+	public float gravity;				// blue movement
+	public boolean inAir, falling;		// blue movement
 	public int mode;
 	
 	

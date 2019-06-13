@@ -21,15 +21,14 @@ import entities.Player;
 import entities.Projectile;
 import entities.ProjectileMask;
 import entities.SpongeBob;
+import entities.Typer;
 import renderEngine.DisplayManager;
-import shapes.Shapes;
 
 public class MasterTurnController {
 
 	private static final int PLAYERTURN = 0;
 	private static final int MIDDLE = 1;
 	private static final int ENEMYTURN = 2;
-	
 	
 	public int playerAction;
 
@@ -52,9 +51,18 @@ public class MasterTurnController {
 	private int turnCounter;
 	
 	// Soundtrack Audio
-	private int buffer = AudioMaster.loadSound("audio/soundtrack.wav");
-	private Source source = new Source();
+	private int buffer;
+	private Source source;
+	private float audioTimer;			// Used to replay the soundtrack
+	private final float SOUNDTRACKLENGTH = 1500;
 	
+	// 
+	private int soulHitBuffer;
+	private Source playerHitSFX;
+	private float hitTimer;
+	private final float HITDELAY = 1;
+	
+	private Typer testTyper;
 	
 	public MasterTurnController(){
 		this.turn = PLAYERTURN;
@@ -86,7 +94,19 @@ public class MasterTurnController {
 		//entities.add(jf);
 		
 		this.turnCounter = 0;
-		source.play(buffer);
+		
+		
+		// Soundtrack Audio
+		this.buffer = AudioMaster.loadSound("audio/soundtrack.wav");
+		this.source = new Source();
+		this.audioTimer = 0;					// Audio Timer, when reaches 0 replay soundtrack
+		
+		this.soulHitBuffer = AudioMaster.loadSound("audio/Soul Hit quiet.wav");
+		this.playerHitSFX = new Source();
+		this.hitTimer = HITDELAY;
+		
+		this.testTyper = new Typer(800, 150, 36, "");
+		this.testTyper.setRenderStar(false);
 	}
 	
 	public void update(){
@@ -94,6 +114,10 @@ public class MasterTurnController {
 		//background
 		bg.update();
 		bg.render();
+		
+		this.testTyper.update();
+		this.testTyper.render();
+		
 		
 		for (Entity entity:entities){
 			entity.update();
@@ -112,7 +136,6 @@ public class MasterTurnController {
 			// Add the player back in
 			player.setGameOverMode();							// Player will do the death animation	
 			entities.add(player);
-			
 			// stop the music
 			source.stop(buffer);
 			
@@ -127,6 +150,7 @@ public class MasterTurnController {
 				
 				// resume playing the music
 				source.play(buffer);
+				this.audioTimer = SOUNDTRACKLENGTH;
 			}
 			
 			return;
@@ -144,8 +168,8 @@ public class MasterTurnController {
 				System.out.println("It is now the middle turn!");
 															
 				this.turnTimer = 50;		// default of 5 second for enemy turn (5 seconds of enemy talking)
-				
-				
+				this.testTyper.setText("I forgive you...");
+				this.testTyper.show();
 			} 
 			
 		} else if (turn == ENEMYTURN){
@@ -153,13 +177,23 @@ public class MasterTurnController {
 			
 			turnTimer -= Clock.Delta();
 			
+			// change player gravity direction while in the middle of dodging projectiles
+			if (turnCounter == 2){
+				if (turnTimer < 75 && turnTimer > 74){
+					this.player.setGravityDirection(this.player.UP);
+					this.player.gravity = 5;
+				}
+			}
+			
 			// Switch back to the player turn
 			if (Keyboard.isKeyDown(Keyboard.KEY_C) || turnTimer <= 0){
 				gameSetPlayerTurn();
 			} else {
 				masterProjectileController.update();
 				detectCollision(player, masterProjectileController);
+				hitTimer -= Clock.Delta();
 			}
+			
 		} else if (turn == MIDDLE){
 			// Here Insert the dialogue that spongebob will have
 			
@@ -169,7 +203,7 @@ public class MasterTurnController {
 			turnTimer -= Clock.Delta();
 			
 			// Switch to the enemy turn (dodge projectiles)
-			if (Keyboard.isKeyDown(Keyboard.KEY_C) || turnTimer <= 0){
+			if (Keyboard.isKeyDown(Keyboard.KEY_F) || turnTimer <= 0){
 				this.turn = ENEMYTURN;
 				this.turnTimer = 150;
 				this.player.setPlayMode();
@@ -181,8 +215,6 @@ public class MasterTurnController {
 					masterProjectileController.addMulitSpiralProjectileSpawner(200, 675, 0f, 0f, 1f, 0, 0, 15f, 1);
 					masterProjectileController.addMulitSpiralProjectileSpawner(1000, 675, 0f, 0f, 1f, (float) Math.PI, 0, 15f, 1);
 					this.pMask.Activate();
-					this.player.setGravityDirection(this.player.LEFT);
-					//this.player.setColor(new Vector3f(1,0,0));
 				} else if (turnCounter == 2){
 					masterProjectileController.addMulitSpiralProjectileSpawner(200, 675, 0f, 0f, 1f, 0, 0, 15f, 1);
 					masterProjectileController.addMulitSpiralProjectileSpawner(1000, 550, 0f, 0f, 1f, (float) Math.PI, 0, 15f, 1);
@@ -202,6 +234,7 @@ public class MasterTurnController {
 					masterProjectileController.addMulitSpiralProjectileSpawner(400, 400, 0f, 0f, 1f, 0f, 20, 1f, 2);
 					this.pMask.Deactivate();
 				}
+				this.testTyper.hide();
 			} 
 			
 		}
@@ -214,6 +247,14 @@ public class MasterTurnController {
 		
 		//clean_up_entities(entities);
 
+		
+		// audio handler
+		if (audioTimer < 0){
+			source.play(buffer);
+			audioTimer = SOUNDTRACKLENGTH;
+		} else {
+			audioTimer -= Clock.Delta();
+		}
 	}
 	
 	public void gameSetPlayerTurn(){
@@ -284,7 +325,12 @@ public class MasterTurnController {
 			float d = distance(player, projectiles.get(i));
 			if (2*d< projectiles.get(i).size + player.size){				// TODO fix collision (It's a bit weird)
 				//System.out.println("hit");									// It seems to detect a collision when there isn't really one there.
+				if (hitTimer < 0){
+					playerHitSFX.play(soulHitBuffer);
+					hitTimer = HITDELAY;
+				}
 				player.decrementHealth();
+				return;
 			}
 		}
 	}

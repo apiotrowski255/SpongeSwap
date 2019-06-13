@@ -34,9 +34,6 @@ public class SpongeBob extends Entity {
 		this.faceX = super.getX() + faceXOffset;
 		this.faceY = super.getY();
 		
-		//this.faceW = 49 * size;
-		//this.faceH = 44 * size;
-		
 		this.faceW = 49*size;
 		this.faceH = 44*size;
 		
@@ -53,34 +50,15 @@ public class SpongeBob extends Entity {
 		this.counter = 0;
 	}
 
-	@Override
 	public void render() {
-		GL11.glEnable(GL_TEXTURE_2D);
-		//GL11.glEnable(GL_TEXTURE_2D);
-		//GL11.glDisable(GL_TEXTURE_2D);
-		//GL11.glColor3f(1, 0, 0);
-		//Shapes.draw_quad(300, 100, faceW, faceH);
-		
 		GL11.glEnable(GL_TEXTURE_2D);
 		GL11.glColor3f(1, 1, 1);
 		Shapes.DrawQuadTex(faceTexture, faceX, faceY, faceW, faceH);
-		
-		//GL11.glDisable(GL_TEXTURE_2D);
-		//GL11.glColor3f(1, 0, 0);
-		//Shapes.draw_quad(300+faceW, 100, faceW, faceH);
-		
-		//GL11.glColor3f(1, 1, 1);
-		//Shapes.draw_quad(0, 18*5, 100*5, 48*5);
-		//GL11.glEnable(GL_TEXTURE_2D);
 		Shapes.DrawQuadTex(bodyTexture, bodyX, bodyY, bodyW, bodyH);
-		
-		//GL11.glEnable(GL_TEXTURE_2D);
 	}
 
-	@Override
 	public void update() {
 		if (counter > 0){
-			
 			super.setX(super.getX() + xSpeed);
 			counter -= 1;
 		}
