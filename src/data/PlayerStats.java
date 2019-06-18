@@ -40,4 +40,9 @@ public class PlayerStats {
 	public void setHealth(int health){
 		this.health = Math.min(health, MAXHEALTH);
 	}
+	
+	public void modifyItems(String string, int index){
+		items.remove(index);
+		items.add(index, string);
+	}
 }

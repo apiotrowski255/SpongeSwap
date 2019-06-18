@@ -92,4 +92,8 @@ public class Typer extends Entity{
 		this.renderStar = value;
 	}
 	
+	public boolean finishTyping(){
+		return this.getCurrentText() == this.getText();
+	}
+	
 }

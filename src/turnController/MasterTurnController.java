@@ -64,6 +64,10 @@ public class MasterTurnController {
 	
 	private Typer testTyper;
 	
+	// middle state keyboard controls
+	private float timeSinceLastPress = 0;
+	private final float DELAY = 1f;
+	
 	public MasterTurnController(){
 		this.turn = PLAYERTURN;
 		this.masterProjectileController = new MasterProjectileController();
@@ -202,8 +206,24 @@ public class MasterTurnController {
 			
 			turnTimer -= Clock.Delta();
 			
+			// If the player wants to skip typing out the dialogueo
+			if (timeSinceLastPress > DELAY){
+				if (Keyboard.isKeyDown(Keyboard.KEY_RETURN)){
+					if (this.testTyper.finishTyping()){
+						turnTimer = 0;
+					} else {
+						this.testTyper.setCurrentText(this.testTyper.getText());
+					}
+				}
+				timeSinceLastPress = 0;
+			} else {
+				timeSinceLastPress += Clock.Delta();
+			}
+			
+			
 			// Switch to the enemy turn (dodge projectiles)
-			if (Keyboard.isKeyDown(Keyboard.KEY_F) || turnTimer <= 0){
+			if (turnTimer <= 0){
+				
 				this.turn = ENEMYTURN;
 				this.turnTimer = 150;
 				this.player.setPlayMode();

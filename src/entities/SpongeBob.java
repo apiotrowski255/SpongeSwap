@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.opengl.Texture;
 
+import engineTester.Clock;
 import shapes.Shapes;
 
 public class SpongeBob extends Entity {
@@ -14,7 +15,7 @@ public class SpongeBob extends Entity {
 	public Texture faceTexture;
 	public Texture bodyTexture;
 	
-	public float faceX, faceY, faceYIdleDisplacement;
+	public float faceX, faceY, faceYIdleDisplacementCounter;
 	public int faceW, faceH;
 	
 	public float bodyX, bodyY;
@@ -27,8 +28,10 @@ public class SpongeBob extends Entity {
 	public int counter;
 	
 	private final float MAXDISPLACEMENT = 5;
-	private final float IDLEMOVEMENTSPEED = 0;
+	private final float IDLEMOVEMENTSPEED = 1f;
 	private boolean upMovement = true;
+	private float currentDelay = 0;
+	private final float DELAY = 5;
 	
 	public ArrayList<Texture> animationDown;
 	
@@ -58,7 +61,7 @@ public class SpongeBob extends Entity {
 		this.counter = 0;
 		
 		//Idle movement
-		this.faceYIdleDisplacement = 0;
+		this.faceYIdleDisplacementCounter = 0;
 		
 		loadAnimationDownTextures();
 	}
@@ -66,7 +69,7 @@ public class SpongeBob extends Entity {
 	public void render() {
 		GL11.glEnable(GL_TEXTURE_2D);
 		GL11.glColor3f(1, 1, 1);
-		Shapes.DrawQuadTex(faceTexture, faceX, faceY + faceYIdleDisplacement, faceW, faceH);
+		Shapes.DrawQuadTex(faceTexture, faceX, faceY + faceYIdleDisplacementCounter, faceW, faceH);
 		Shapes.DrawQuadTex(bodyTexture, bodyX, bodyY, bodyW, bodyH);
 	}
 
@@ -92,17 +95,26 @@ public class SpongeBob extends Entity {
 		this.bodyX = super.getX();
 		this.bodyY = super.getY() + bodyYOffset;
 		
+		//System.out.println(faceYIdleDisplacementCounter);
+		
 		if (upMovement){
-			this.faceYIdleDisplacement += IDLEMOVEMENTSPEED;
-			if (faceYIdleDisplacement >= MAXDISPLACEMENT){
+			if (currentDelay > DELAY){
+				this.faceYIdleDisplacementCounter += 1;
+				currentDelay = 0;
+			}
+			if (faceYIdleDisplacementCounter >= MAXDISPLACEMENT){
 				upMovement = false;
 			}
 		} else {
-			this.faceYIdleDisplacement -= IDLEMOVEMENTSPEED;
-			if (faceYIdleDisplacement < 0){
+			if (currentDelay > DELAY){
+				this.faceYIdleDisplacementCounter -= 1;
+				currentDelay = 0;
+			}
+			if (faceYIdleDisplacementCounter < 0){
 				upMovement = true;
 			}
 		}
+		this.currentDelay += Clock.Delta();
 		
 	}
 	

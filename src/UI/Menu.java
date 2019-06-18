@@ -308,9 +308,12 @@ public class Menu extends Entity {
 						}
 					})) {
 						System.out.println("use the Item");
+						System.out.println(selected);
 						player.setHealth(player.getHealth()+42);
+						player.stats.modifyItems("None", selected);
 						source.play(healSFXBuffer);
 						setPlayerTurn();
+						timeSinceLastPress = 0;
 						return;
 					} else {
 
