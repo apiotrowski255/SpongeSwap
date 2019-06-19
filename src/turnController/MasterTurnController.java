@@ -16,6 +16,7 @@ import engineTester.Clock;
 import entities.Background;
 import entities.Entity;
 import entities.JellyFish;
+import entities.MultiTyper;
 import entities.PlaySpace;
 import entities.Player;
 import entities.Projectile;
@@ -67,6 +68,8 @@ public class MasterTurnController {
 	// middle state keyboard controls
 	private float timeSinceLastPress = 0;
 	private final float DELAY = 1f;
+	private MultiTyper testMultiTyper;
+	
 	
 	public MasterTurnController(){
 		this.turn = PLAYERTURN;
@@ -109,8 +112,23 @@ public class MasterTurnController {
 		this.playerHitSFX = new Source();
 		this.hitTimer = HITDELAY;
 		
+		
+		
 		this.testTyper = new Typer(800, 150, 36, "");
 		this.testTyper.setRenderStar(false);
+		
+		
+		this.testMultiTyper = new MultiTyper(100, 100, 24, new ArrayList<String>());
+		this.testMultiTyper.text.add("aaaa");
+		this.testMultiTyper.text.add("bbbbbb");
+		this.testMultiTyper.text.add("ccccc");
+		this.testMultiTyper.text.add("ddd");
+		this.testMultiTyper.text.add("ee");
+		this.testMultiTyper.text.add("f");
+		this.testMultiTyper.text.add("gggggg");
+		this.testMultiTyper.text.add("hhhh");
+		this.testMultiTyper.text.add("iii");
+		this.testMultiTyper.text.add("jjjj");
 	}
 	
 	public void update(){
@@ -122,6 +140,8 @@ public class MasterTurnController {
 		this.testTyper.update();
 		this.testTyper.render();
 		
+		this.testMultiTyper.update();
+		this.testMultiTyper.render();
 		
 		for (Entity entity:entities){
 			entity.update();

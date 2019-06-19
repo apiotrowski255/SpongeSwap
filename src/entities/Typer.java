@@ -1,10 +1,12 @@
 package entities;
 
 import java.awt.Font;
+import java.util.ArrayList;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.TrueTypeFont;
 
+import UI.Text;
 import engineTester.Clock;
 
 public class Typer extends Entity{
@@ -17,6 +19,9 @@ public class Typer extends Entity{
 	public boolean hide;
 	public boolean renderStar;
 	
+	public int fontsize;
+	
+	
 	public Typer(float x, float y, int fontsize, String text) {
 		super(x, y);
 		this.text = text;
@@ -28,6 +33,8 @@ public class Typer extends Entity{
 		
 		Font awtFont = new Font(Font.SERIF, Font.PLAIN, fontsize); //name, style (PLAIN, BOLD, or ITALIC), size
 		this.font = new TrueTypeFont(awtFont, false); //base Font, anti-aliasing true/false
+		
+		this.fontsize = fontsize;
 	}
 
 	
@@ -38,7 +45,6 @@ public class Typer extends Entity{
 			font.drawString(super.getX()-30, super.getY()+10, "*", Color.white);		// magic numbers for alignment
 		}
 		font.drawString(super.getX(), super.getY(), this.currentText, Color.white);
-		
 	}
 
 	
