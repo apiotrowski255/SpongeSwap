@@ -37,8 +37,11 @@ public class Player extends Entity {
 	
 	// handle movement
 	public Vector3f color;
+	
+	// Blue movement
 	public float gravity;				// blue movement
 	public boolean inAir, falling;		// blue movement
+	
 	public int mode;
 	
 	
@@ -57,9 +60,11 @@ public class Player extends Entity {
 	// Audio handlers
 	private int SoulShatterBuffer;
 	private int SoulSplitBuffer;
+	private int SlamBuffer;
 	private Source source;
 	
-
+	private boolean playSlam;
+	
 	public Player(int x, int y, int size) {
 		super(x, y);
 		this.size = size;
@@ -85,7 +90,9 @@ public class Player extends Entity {
 		// Audio
 		this.SoulShatterBuffer = AudioMaster.loadSound("audio/SOUL shatter.wav");
 		this.SoulSplitBuffer = AudioMaster.loadSound("audio/SOUL split.wav");
+		this.SlamBuffer = AudioMaster.loadSound("audio/Slam.wav");
 		this.source = new Source();
+		this.playSlam = false;
 	}
 	
 	public void init(){
@@ -191,6 +198,10 @@ public class Player extends Entity {
 					gravity = 0;
 					inAir = false;
 					falling = false;
+					if (playSlam){
+						playSlam = false;
+						source.play(SlamBuffer);
+					}
 				}
 			}
 		} else if (gravityDirection == LEFT) {
@@ -202,6 +213,10 @@ public class Player extends Entity {
 					gravity = 0;
 					inAir = false;
 					falling = false;
+					if (playSlam){
+						playSlam = false;
+						source.play(SlamBuffer);
+					}
 				}
 			}
 		} else if (gravityDirection == UP) {
@@ -213,6 +228,10 @@ public class Player extends Entity {
 					gravity = 0;
 					inAir = false;
 					falling = false;
+					if (playSlam){
+						playSlam = false;
+						source.play(SlamBuffer);
+					}
 				}
 			}
 		} else if (gravityDirection == RIGHT) {
@@ -224,6 +243,10 @@ public class Player extends Entity {
 					gravity = 0;
 					inAir = false;
 					falling = false;
+					if (playSlam){
+						playSlam = false;
+						source.play(SlamBuffer);
+					}
 				}
 			}
 		}
@@ -333,6 +356,10 @@ public class Player extends Entity {
 			return variable;
 	}
 
+	public void playSlamSFXOnNextChange(){
+		this.playSlam = true;
+	}
+	
 	public void setGravityDirection(int gravity_direction) {
 		if (gravity_direction >= 0 && gravity_direction <= 3) {
 			this.gravityDirection = gravity_direction;

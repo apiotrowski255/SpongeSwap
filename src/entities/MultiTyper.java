@@ -48,6 +48,8 @@ public class MultiTyper extends Entity{
 	}
 
 	public void update() {
+		if (hide)
+			return;
 		if (currentText.equals(text)){
 			return;
 		} else {
@@ -62,8 +64,6 @@ public class MultiTyper extends Entity{
 				}
 				xIndex += 1;
 				
-				
-				int x = 0;
 				int y = 0;
 				
 				while (y < yIndex){
@@ -72,7 +72,7 @@ public class MultiTyper extends Entity{
 				}
 				String tmp = text.get(yIndex).substring(0, xIndex);
 				currentText.add(tmp);
-				System.out.println(tmp);
+				//System.out.println(tmp);
 				
 				timeSinceLastLetter = 0;
 			}
@@ -81,5 +81,39 @@ public class MultiTyper extends Entity{
 		}
 		
 	}
-
+	
+	public boolean finishedTyping(){
+		return this.currentText.equals(this.text);
+	}
+	
+	public void skipTyping(){
+		this.currentText = this.text;
+	}
+	
+	public void setCurrentText(ArrayList<String> string){
+		this.currentText = string;
+	}
+	
+	public void clearCurrentText(){
+		this.currentText = new ArrayList<String>();
+	}
+	
+	public void clearText(){
+		this.text.clear();
+		this.currentText.clear();
+		this.xIndex = 0;
+		this.yIndex = 0;
+	}
+	
+	public void addText(String string){
+		this.text.add(string);
+	}
+	
+	public void hide(){
+		this.hide = true;
+	}
+	
+	public void show(){
+		this.hide = false;
+	}
 }

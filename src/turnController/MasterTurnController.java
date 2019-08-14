@@ -63,7 +63,6 @@ public class MasterTurnController {
 	private float hitTimer;
 	private final float HITDELAY = 1;
 	
-	private Typer testTyper;
 	
 	// middle state keyboard controls
 	private float timeSinceLastPress = 0;
@@ -114,21 +113,7 @@ public class MasterTurnController {
 		
 		
 		
-		this.testTyper = new Typer(800, 150, 36, "");
-		this.testTyper.setRenderStar(false);
-		
-		
-		this.testMultiTyper = new MultiTyper(100, 100, 24, new ArrayList<String>());
-		this.testMultiTyper.text.add("aaaa");
-		this.testMultiTyper.text.add("bbbbbb");
-		this.testMultiTyper.text.add("ccccc");
-		this.testMultiTyper.text.add("ddd");
-		this.testMultiTyper.text.add("ee");
-		this.testMultiTyper.text.add("f");
-		this.testMultiTyper.text.add("gggggg");
-		this.testMultiTyper.text.add("hhhh");
-		this.testMultiTyper.text.add("iii");
-		this.testMultiTyper.text.add("jjjj");
+		this.testMultiTyper = new MultiTyper(800, 150, 24, new ArrayList<String>());
 	}
 	
 	public void update(){
@@ -137,8 +122,6 @@ public class MasterTurnController {
 		bg.update();
 		bg.render();
 		
-		this.testTyper.update();
-		this.testTyper.render();
 		
 		this.testMultiTyper.update();
 		this.testMultiTyper.render();
@@ -181,7 +164,7 @@ public class MasterTurnController {
 		}
 		
 		if (turn == PLAYERTURN){
-			// Switch to the enemy Turn
+			// Switch to the Middle Turn
 			if (menu.playerTurnCompleted()){
 				this.turn = MIDDLE;
 				this.player.disablePlayerMovement();
@@ -192,8 +175,16 @@ public class MasterTurnController {
 				System.out.println("It is now the middle turn!");
 															
 				this.turnTimer = 50;		// default of 5 second for enemy turn (5 seconds of enemy talking)
-				this.testTyper.setText("I forgive you...");
-				this.testTyper.show();
+				this.testMultiTyper.clearCurrentText();
+				if (turnCounter == 0){
+					this.testMultiTyper.addText("I forgive you...");
+				} else if (turnCounter == 1){
+					this.testMultiTyper.addText("I forgive you...");
+					this.testMultiTyper.addText("Even if you don't");
+				} else {
+					this.testMultiTyper.addText("I need more lines");
+				}
+				this.testMultiTyper.show();
 			} 
 			
 		} else if (turn == ENEMYTURN){
@@ -203,9 +194,11 @@ public class MasterTurnController {
 			
 			// change player gravity direction while in the middle of dodging projectiles
 			if (turnCounter == 2){
-				if (turnTimer < 75 && turnTimer > 74){
+				if (turnTimer < 75 && this.player.getGravityDirection() != this.player.UP){
 					this.player.setGravityDirection(this.player.UP);
 					this.player.gravity = 5;
+					this.player.playSlamSFXOnNextChange();
+					this.SB.playAnimationUp();
 				}
 			}
 			
@@ -229,10 +222,10 @@ public class MasterTurnController {
 			// If the player wants to skip typing out the dialogueo
 			if (timeSinceLastPress > DELAY){
 				if (Keyboard.isKeyDown(Keyboard.KEY_RETURN)){
-					if (this.testTyper.finishTyping()){
+					if (this.testMultiTyper.finishedTyping()){
 						turnTimer = 0;
 					} else {
-						this.testTyper.setCurrentText(this.testTyper.getText());
+						this.testMultiTyper.skipTyping();
 					}
 				}
 				timeSinceLastPress = 0;
@@ -274,7 +267,8 @@ public class MasterTurnController {
 					masterProjectileController.addMulitSpiralProjectileSpawner(400, 400, 0f, 0f, 1f, 0f, 20, 1f, 2);
 					this.pMask.Deactivate();
 				}
-				this.testTyper.hide();
+				this.testMultiTyper.hide();
+				this.testMultiTyper.clearText();
 			} 
 			
 		}
