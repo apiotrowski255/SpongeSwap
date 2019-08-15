@@ -151,7 +151,7 @@ public class MasterTurnController {
 				initStartEntities();
 				
 				// relive the player
-				player.relive();
+				player.reset();
 				player.setHealth(92);
 				this.turn = PLAYERTURN;
 				
@@ -241,7 +241,7 @@ public class MasterTurnController {
 				this.turnTimer = 150;
 				this.player.setPlayMode();
 				
-				if (turnCounter == 0){
+				if (turnCounter == 10){
 					masterProjectileController.addMulitSpiralProjectileSpawner(200, 675, 0f, 0f, 1f, 0, 0, 15f, 1);
 					this.pMask.Activate();
 				} else if (turnCounter == 1) {
@@ -252,7 +252,7 @@ public class MasterTurnController {
 					masterProjectileController.addMulitSpiralProjectileSpawner(200, 675, 0f, 0f, 1f, 0, 0, 15f, 1);
 					masterProjectileController.addMulitSpiralProjectileSpawner(1000, 550, 0f, 0f, 1f, (float) Math.PI, 0, 15f, 1);
 					this.pMask.Activate();
-				} else if (turnCounter < 5) {
+				} else if (turnCounter == 3) {
 					
 					this.player.setColor(new Vector3f(1,0,0));
 					int i = 0;
@@ -263,8 +263,10 @@ public class MasterTurnController {
 					}
 					this.turnTimer = 50;
 					this.pMask.Deactivate();
-				} else {
-					masterProjectileController.addMulitSpiralProjectileSpawner(400, 400, 0f, 0f, 1f, 0f, 20, 1f, 2);
+				} else if (turnCounter == 0){
+					this.player.setColor(new Vector3f(1,0,0));
+					masterProjectileController.addMulitSpiralProjectileSpawner(0, 75, 0.5f, 0f, 1f, 0f, 17, 1f, 2);
+					masterProjectileController.addMulitSpiralProjectileSpawner(1280, 75, 0.5f, (float) Math.PI, 1f, 0f, 17, 1f, 2);
 					this.pMask.Deactivate();
 				}
 				this.testMultiTyper.hide();

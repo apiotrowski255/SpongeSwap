@@ -375,10 +375,11 @@ public class Player extends Entity {
 		this.yMaxBound = DisplayManager.getHeight() - size;
 	}
 	
-	public void relive(){
+	public void reset(){
 		this.timeDelay = 0;
 		this.extention = 0;
 		this.phase1 = false;
+		this.gravityDirection = DOWN;
 		this.setTexture("heart");
 		this.playerBrokenBits.clear();
 	}

@@ -33,11 +33,11 @@ public class SpongeBob extends Entity {
 	private float idleTimer = 0;
 	private final float DELAY = 5;
 	
-	public ArrayList<Texture> animationDown, animationUp;
+	public ArrayList<Texture> animationDown, animationUp, animationLeft;
 	private int currentFrameCounter;
 	private float animationTimer;
 	private float frame_speed;
-	private boolean animateDown, animateUp;
+	private boolean animateDown, animateUp, animateLeft;
 	
 	public SpongeBob(float x, float y) {
 		super(x, y);
@@ -45,7 +45,7 @@ public class SpongeBob extends Entity {
 		int size = 4;
 		
 		this.faceXOffset = 11 * size;
-		this.bodyYOffset = 27 * size;
+		this.bodyYOffset = 6 * size;
 		this.faceX = super.getX() + faceXOffset;
 		this.faceY = super.getY();
 		
@@ -55,11 +55,11 @@ public class SpongeBob extends Entity {
 		this.bodyX = super.getX();
 		this.bodyY = super.getY() + bodyYOffset;
 		
-		this.bodyW = 72 * size;
-		this.bodyH = 48 * size;
+		this.bodyW = 109 * size;
+		this.bodyH = 69 * size;
 	
 		this.faceTexture = Shapes.LoadTexture("res/SpongeBob/face_netural.png", "PNG");
-		this.bodyTexture = Shapes.LoadTexture("res/SpongeBob/torso.png", "PNG");
+		this.bodyTexture = Shapes.LoadTexture("res/SpongeBob/torso_remake.png", "PNG");
 		
 		this.xSpeed = 4;
 		this.counter = 0;
@@ -75,6 +75,7 @@ public class SpongeBob extends Entity {
 		
 		loadAnimationDownTextures();
 		loadAnimationUpTextures();
+		loadAnimationLeftTextures();
 	}
 
 	public void render() {
@@ -100,49 +101,44 @@ public class SpongeBob extends Entity {
 			animateDown();
 		} else if (animateUp){
 			animateUp();
+		} else if (animateLeft){
+			animateLeft();
 		}
 	}
 	
-	public void animateUp(){
-		int size = 4;
-		if (this.bodyYOffset == 7 * size){
-			this.bodyW = 77 * size;
-			this.bodyH = 69 * size;
-			bodyTexture = animationDown.get(0);
-		} else if (this.bodyYOffset == 10 * size){
-			this.bodyW = 78 * size;
-			this.bodyH = 65 * size;
-			bodyTexture = animationDown.get(2);
-		} else if (this.bodyYOffset == 27 * size){
-			this.bodyW = 75 * size;
-			this.bodyH = 47 * size;
-			bodyTexture = animationDown.get(3);
-		}
+	public void animateLeft(){
 		if (animationTimer > this.frame_speed){
 			
-			if (currentFrameCounter == animationDown.size() - 1){
+			if (currentFrameCounter == animationDown.size()){
+				// End the Animation
+				animateLeft = false;
+				currentFrameCounter = 0;
+				bodyTexture = Shapes.LoadTexture("res/SpongeBob/torso_remake.png", "PNG");
+				System.out.println("Animation Finished");
+				return;
+			} else if (currentFrameCounter < animationDown.size()){
+				bodyTexture = animationLeft.get(currentFrameCounter);
+				currentFrameCounter += 1;
+			}
+
+			animationTimer = 0;
+		}
+		animationTimer += Clock.Delta();
+	}
+	
+	public void animateUp(){
+		if (animationTimer > this.frame_speed){
+			
+			if (currentFrameCounter == animationDown.size()){
 				// End the Animation
 				animateUp = false;
 				currentFrameCounter = 0;
-				bodyTexture = Shapes.LoadTexture("res/SpongeBob/torso.png", "PNG");
-				this.bodyX = super.getX();
-				this.bodyY = super.getY() + bodyYOffset;
-				
-				// Dimensions of Body_full.png multiplied by size factor
-				this.bodyW = 72 * size;
-				this.bodyH = 48 * size;
-				this.bodyYOffset = 27 * size;
-			} else if (currentFrameCounter < animationDown.size() - 1){
-				
+				bodyTexture = Shapes.LoadTexture("res/SpongeBob/torso_remake.png", "PNG");
+				System.out.println("Animation Finished");
+				return;
+			} else if (currentFrameCounter < animationDown.size()){
+				bodyTexture = animationUp.get(currentFrameCounter);
 				currentFrameCounter += 1;
-				if (currentFrameCounter == 1){
-					this.bodyYOffset = 27 * size;
-				} else if (currentFrameCounter == 2){
-					this.bodyYOffset = 10 * size;
-				} else {
-					this.bodyYOffset = 7 * size;
-				}
-				
 			}
 
 			animationTimer = 0;
@@ -151,45 +147,18 @@ public class SpongeBob extends Entity {
 	}
 	
 	public void animateDown(){
-		int size = 4;
-		if (this.bodyYOffset == 7 * size){
-			this.bodyW = 77 * size;
-			this.bodyH = 69 * size;
-			bodyTexture = animationDown.get(0);
-		} else if (this.bodyYOffset == 10 * size){
-			this.bodyW = 78 * size;
-			this.bodyH = 65 * size;
-			bodyTexture = animationDown.get(2);
-		} else if (this.bodyYOffset == 27 * size){
-			this.bodyW = 75 * size;
-			this.bodyH = 47 * size;
-			bodyTexture = animationDown.get(3);
-		}
 		if (animationTimer > this.frame_speed){
 			
-			if (currentFrameCounter == animationDown.size() - 1){
+			if (currentFrameCounter == animationDown.size()){
 				// End the Animation
 				animateDown = false;
 				currentFrameCounter = 0;
-				bodyTexture = Shapes.LoadTexture("res/SpongeBob/torso.png", "PNG");
-				this.bodyX = super.getX();
-				this.bodyY = super.getY() + bodyYOffset;
-				
-				// Dimensions of Body_full.png multiplied by size factor
-				this.bodyW = 72 * size;
-				this.bodyH = 48 * size;
-				this.bodyYOffset = 27 * size;
-			} else if (currentFrameCounter < animationDown.size() - 1){
-				
+				bodyTexture = Shapes.LoadTexture("res/SpongeBob/torso_remake.png", "PNG");
+				System.out.println("Animation Finished");
+				return;
+			} else if (currentFrameCounter < animationDown.size()){
+				bodyTexture = animationDown.get(currentFrameCounter);
 				currentFrameCounter += 1;
-				if (currentFrameCounter == 1){
-					this.bodyYOffset = 7 * size;
-				} else if (currentFrameCounter == 2){
-					this.bodyYOffset = 10 * size;
-				} else {
-					this.bodyYOffset = 27 * size;
-				}
-				
 			}
 
 			animationTimer = 0;
@@ -244,42 +213,56 @@ public class SpongeBob extends Entity {
 	
 	public void loadAnimationDownTextures(){
 		this.animationDown = new ArrayList<Texture>();
-		animationDown.add(Shapes.LoadTexture("res/SpongeBob/down1.png", "PNG"));
-		animationDown.add(Shapes.LoadTexture("res/SpongeBob/down2.png", "PNG"));
-		animationDown.add(Shapes.LoadTexture("res/SpongeBob/down3.png", "PNG"));
-		animationDown.add(Shapes.LoadTexture("res/SpongeBob/down4.png", "PNG"));
-		animationDown.add(Shapes.LoadTexture("res/SpongeBob/down5.png", "PNG"));
+		animationDown.add(Shapes.LoadTexture("res/SpongeBob/down1_remake.png", "PNG"));
+		animationDown.add(Shapes.LoadTexture("res/SpongeBob/down1_remake.png", "PNG"));
+		animationDown.add(Shapes.LoadTexture("res/SpongeBob/down3_remake.png", "PNG"));
+		animationDown.add(Shapes.LoadTexture("res/SpongeBob/down4_remake.png", "PNG"));
+		animationDown.add(Shapes.LoadTexture("res/SpongeBob/down4_remake.png", "PNG"));
 	}
 	
 	public void loadAnimationUpTextures(){
 		this.animationUp = new ArrayList<Texture>();
-		animationUp.add(Shapes.LoadTexture("res/SpongeBob/down5.png", "PNG"));
-		animationUp.add(Shapes.LoadTexture("res/SpongeBob/down4.png", "PNG"));
-		animationUp.add(Shapes.LoadTexture("res/SpongeBob/down3.png", "PNG"));
-		animationUp.add(Shapes.LoadTexture("res/SpongeBob/down2.png", "PNG"));
-		animationUp.add(Shapes.LoadTexture("res/SpongeBob/down1.png", "PNG"));
+		animationUp.add(Shapes.LoadTexture("res/SpongeBob/down4_remake.png", "PNG"));
+		animationUp.add(Shapes.LoadTexture("res/SpongeBob/down4_remake.png", "PNG"));
+		animationUp.add(Shapes.LoadTexture("res/SpongeBob/down3_remake.png", "PNG"));
+		animationUp.add(Shapes.LoadTexture("res/SpongeBob/down1_remake.png", "PNG"));
+		animationUp.add(Shapes.LoadTexture("res/SpongeBob/down1_remake.png", "PNG"));
+	}
+	
+	public void loadAnimationLeftTextures(){
+		this.animationLeft = new ArrayList<Texture>();
+		animationLeft.add(Shapes.LoadTexture("res/SpongeBob/side_1_remake.png", "PNG"));
+		animationLeft.add(Shapes.LoadTexture("res/SpongeBob/side_1_remake.png", "PNG"));
+		animationLeft.add(Shapes.LoadTexture("res/SpongeBob/side_3_remake.png", "PNG"));
+		animationLeft.add(Shapes.LoadTexture("res/SpongeBob/side_4_remake.png", "PNG"));
+		animationLeft.add(Shapes.LoadTexture("res/SpongeBob/side_4_remake.png", "PNG"));
+	}
+	
+	public void playAnimationLeft(){
+		System.out.println("playing Left animation");
+		this.animateLeft = true;
+		
+		currentFrameCounter = 0;
+		bodyTexture = animationLeft.get(currentFrameCounter);
+		currentFrameCounter += 1;
 	}
 	
 	public void playAnimationUp(){
-		System.out.println("playing animation");
+		System.out.println("playing Up animation");
 		this.animateUp = true;
 		
-		int size = 4;
-		this.bodyW = 77 * size;
-		this.bodyH = 69 * size;
-		this.bodyYOffset = 27 * size;
-		bodyTexture = animationDown.get(4);
+		currentFrameCounter = 0;
+		bodyTexture = animationUp.get(currentFrameCounter);
+		currentFrameCounter += 1;
 	}
 	
 	public void playAnimationDown(){
-		System.out.println("playing animation");
+		System.out.println("playing Down animation");
 		this.animateDown = true;
 		
-		int size = 4;
-		this.bodyW = 77 * size;
-		this.bodyH = 69 * size;
-		this.bodyYOffset = 7 * size;
-		bodyTexture = animationDown.get(0);
+		currentFrameCounter = 0;
+		bodyTexture = animationDown.get(currentFrameCounter);
+		currentFrameCounter += 1;
 	}
 	
 	public void setBodyTexture(String texture){

@@ -8,15 +8,15 @@ import entities.Projectile;
 
 public class SingleSpiralProjectileSpawner {
 
-	public float delay, angleDifference, x, y, speed, direction, timeSinceLastShot;
+	public float delay, angleDifference, x, y, spawnerSpeed, direction, timeSinceLastShot;
 	public int incrementer;
 	private ArrayList<Projectile> projectiles;
 	private float startAngle;
 	
-	public SingleSpiralProjectileSpawner(float x, float y, float speed, float direction, float startAngle, float angleDifference, float delay){
+	public SingleSpiralProjectileSpawner(float x, float y, float spawnerSpeed, float direction, float startAngle, float angleDifference, float delay){
 		this.x = x;
 		this.y = y;
-		this.speed = speed;
+		this.spawnerSpeed = spawnerSpeed;
 		this.direction = direction;
 		this.startAngle = startAngle;
 		this.angleDifference = angleDifference;
@@ -42,15 +42,15 @@ public class SingleSpiralProjectileSpawner {
 			incrementer++;
 		}
 	
-		x += (float) (speed * Math.cos(direction));
-		y += (float) (speed * Math.sin(direction));
+		x += (float) (spawnerSpeed * Math.cos(direction));
+		y += (float) (spawnerSpeed * Math.sin(direction));
 		
 		timeSinceLastShot += Clock.Delta();
 	}
 	
 	// Angle is in radians
-	public void shootProjectile(float x, float y, float speed, float angle, int size){
-		Projectile p = new Projectile(x, y, speed, angle, size, (float) 0.0);
+	public void shootProjectile(float x, float y, float projectileSpeed, float angle, int size){
+		Projectile p = new Projectile(x, y, projectileSpeed, angle, size, (float) 0.0);
 		projectiles.add(p);
 	}
 	
