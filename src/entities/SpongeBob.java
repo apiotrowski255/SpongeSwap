@@ -33,11 +33,11 @@ public class SpongeBob extends Entity {
 	private float idleTimer = 0;
 	private final float DELAY = 5;
 	
-	public ArrayList<Texture> animationDown, animationUp, animationLeft;
+	public ArrayList<Texture> animationDown, animationUp, animationLeft, animationRight;
 	private int currentFrameCounter;
 	private float animationTimer;
 	private float frame_speed;
-	private boolean animateDown, animateUp, animateLeft;
+	private boolean animateDown, animateUp, animateLeft, animateRight;
 	
 	public SpongeBob(float x, float y) {
 		super(x, y);
@@ -76,6 +76,7 @@ public class SpongeBob extends Entity {
 		loadAnimationDownTextures();
 		loadAnimationUpTextures();
 		loadAnimationLeftTextures();
+		loadAnimationRightTextures();
 	}
 
 	public void render() {
@@ -103,20 +104,42 @@ public class SpongeBob extends Entity {
 			animateUp();
 		} else if (animateLeft){
 			animateLeft();
+		} else if (animateRight){
+			animateRight();
 		}
 	}
 	
-	public void animateLeft(){
+	public void animateRight(){
 		if (animationTimer > this.frame_speed){
 			
-			if (currentFrameCounter == animationDown.size()){
+			if (currentFrameCounter == animationRight.size()){
 				// End the Animation
 				animateLeft = false;
 				currentFrameCounter = 0;
 				bodyTexture = Shapes.LoadTexture("res/SpongeBob/torso_remake.png", "PNG");
 				System.out.println("Animation Finished");
 				return;
-			} else if (currentFrameCounter < animationDown.size()){
+			} else if (currentFrameCounter < animationRight.size()){
+				bodyTexture = animationRight.get(currentFrameCounter);
+				currentFrameCounter += 1;
+			}
+
+			animationTimer = 0;
+		}
+		animationTimer += Clock.Delta();
+	}
+	
+	public void animateLeft(){
+		if (animationTimer > this.frame_speed){
+			
+			if (currentFrameCounter == animationLeft.size()){
+				// End the Animation
+				animateLeft = false;
+				currentFrameCounter = 0;
+				bodyTexture = Shapes.LoadTexture("res/SpongeBob/torso_remake.png", "PNG");
+				System.out.println("Animation Finished");
+				return;
+			} else if (currentFrameCounter < animationLeft.size()){
 				bodyTexture = animationLeft.get(currentFrameCounter);
 				currentFrameCounter += 1;
 			}
@@ -129,14 +152,14 @@ public class SpongeBob extends Entity {
 	public void animateUp(){
 		if (animationTimer > this.frame_speed){
 			
-			if (currentFrameCounter == animationDown.size()){
+			if (currentFrameCounter == animationUp.size()){
 				// End the Animation
 				animateUp = false;
 				currentFrameCounter = 0;
 				bodyTexture = Shapes.LoadTexture("res/SpongeBob/torso_remake.png", "PNG");
 				System.out.println("Animation Finished");
 				return;
-			} else if (currentFrameCounter < animationDown.size()){
+			} else if (currentFrameCounter < animationUp.size()){
 				bodyTexture = animationUp.get(currentFrameCounter);
 				currentFrameCounter += 1;
 			}
@@ -236,6 +259,24 @@ public class SpongeBob extends Entity {
 		animationLeft.add(Shapes.LoadTexture("res/SpongeBob/side_3_remake.png", "PNG"));
 		animationLeft.add(Shapes.LoadTexture("res/SpongeBob/side_4_remake.png", "PNG"));
 		animationLeft.add(Shapes.LoadTexture("res/SpongeBob/side_4_remake.png", "PNG"));
+	}
+	
+	public void loadAnimationRightTextures(){
+		this.animationRight = new ArrayList<Texture>();
+		animationRight.add(Shapes.LoadTexture("res/SpongeBob/side_4_remake.png", "PNG"));
+		animationRight.add(Shapes.LoadTexture("res/SpongeBob/side_4_remake.png", "PNG"));
+		animationRight.add(Shapes.LoadTexture("res/SpongeBob/side_3_remake.png", "PNG"));
+		animationRight.add(Shapes.LoadTexture("res/SpongeBob/side_1_remake.png", "PNG"));
+		animationRight.add(Shapes.LoadTexture("res/SpongeBob/side_1_remake.png", "PNG"));
+	}
+	
+	public void playAnimationRight(){
+		System.out.println("playing Right animation");
+		this.animateRight = true;
+		
+		currentFrameCounter = 0;
+		bodyTexture = animationRight.get(currentFrameCounter);
+		currentFrameCounter += 1;
 	}
 	
 	public void playAnimationLeft(){

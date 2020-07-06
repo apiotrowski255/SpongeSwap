@@ -43,7 +43,7 @@ public class MasterTurnController {
 	private MasterProjectileController masterProjectileController;
 	private Background bg;
 	private Player player;
-	private PlaySpace ps;
+	private PlaySpace playSpace;
 	private JellyFish jf;
 	private Menu menu;
 	private SpongeBob SB;
@@ -77,20 +77,18 @@ public class MasterTurnController {
 		this.bg = new Background();
 		this.player = new Player(32, 32, 32);
 		player.setMenuMode();
-		this.ps = new PlaySpace(32, 500, 250, 1216, player);		//Text mode
-		ps.centerPlayerPosition();
+		this.playSpace = new PlaySpace(32, 500, 250, 1216, player);		//Text mode
+		playSpace.centerPlayerPosition();
 		this.SB = new SpongeBob(475, 150);
 		//ps.setPlayerBounds();					//Set player bounds within the space
 		
 		// Create the in game menuUI
 		this.menu = new Menu(player, SB);
 		
-		this.pMask = new ProjectileMask(0,0, ps);
+		this.pMask = new ProjectileMask(0,0, playSpace);
 		this.pMask.Deactivate();
 		
 		this.turnTimer = 20;
-		
-		
 		
 		// init
 		initStartEntities();
@@ -122,7 +120,6 @@ public class MasterTurnController {
 		bg.update();
 		bg.render();
 		
-		
 		this.testMultiTyper.update();
 		this.testMultiTyper.render();
 		
@@ -146,6 +143,14 @@ public class MasterTurnController {
 			// stop the music
 			source.stop(buffer);
 			
+			
+			this.testMultiTyper.setX(400);
+			this.testMultiTyper.setY(100);
+			ArrayList<String> test = new ArrayList<String>();
+			test.add("GameOver");
+			this.testMultiTyper.setCurrentText(test);
+			this.testMultiTyper.show();
+			
 			if (Keyboard.isKeyDown(Keyboard.KEY_RETURN)){
 				entities.clear();
 				initStartEntities();
@@ -158,6 +163,11 @@ public class MasterTurnController {
 				// resume playing the music
 				source.play(buffer);
 				this.audioTimer = SOUNDTRACKLENGTH;
+				
+				this.testMultiTyper.setX(800);
+				this.testMultiTyper.setY(150);
+				this.testMultiTyper.clearText();
+				this.testMultiTyper.hide();
 			}
 			
 			return;
@@ -168,10 +178,10 @@ public class MasterTurnController {
 			if (menu.playerTurnCompleted()){
 				this.turn = MIDDLE;
 				this.player.disablePlayerMovement();
-				this.ps.setPlayerBounds();
+				this.playSpace.setPlayerBounds();
 				this.menu.subMenu_options.get(0).hide();
-				ps.centerPlayerPosition();
-				ps.invokeTransition(DisplayManager.getWidth()/2 - 600/2, 550, 200, 600, 50);
+				playSpace.centerPlayerPosition();
+				playSpace.invokeTransition(DisplayManager.getWidth()/2 - 600/2, 550, 200, 600, 50);
 				System.out.println("It is now the middle turn!");
 															
 				this.turnTimer = 50;		// default of 5 second for enemy turn (5 seconds of enemy talking)
@@ -181,7 +191,10 @@ public class MasterTurnController {
 				} else if (turnCounter == 1){
 					this.testMultiTyper.addText("I forgive you...");
 					this.testMultiTyper.addText("Even if you don't");
-				} else {
+				} else if (turnCounter == 2){
+					this.testMultiTyper.addText("You can still fix this,");
+					this.testMultiTyper.addText("Only if you want.");
+				}else {
 					this.testMultiTyper.addText("I need more lines");
 				}
 				this.testMultiTyper.show();
@@ -241,18 +254,27 @@ public class MasterTurnController {
 				this.turnTimer = 150;
 				this.player.setPlayMode();
 				
-				if (turnCounter == 10){
+				if (turnCounter == 0){
 					masterProjectileController.addMulitSpiralProjectileSpawner(200, 675, 0f, 0f, 1f, 0, 0, 15f, 1);
 					this.pMask.Activate();
 				} else if (turnCounter == 1) {
+					this.player.setColor(new Vector3f(0,0,1));
 					masterProjectileController.addMulitSpiralProjectileSpawner(200, 675, 0f, 0f, 1f, 0, 0, 15f, 1);
 					masterProjectileController.addMulitSpiralProjectileSpawner(1000, 675, 0f, 0f, 1f, (float) Math.PI, 0, 15f, 1);
 					this.pMask.Activate();
 				} else if (turnCounter == 2){
+					this.player.setColor(new Vector3f(0,0,1));
 					masterProjectileController.addMulitSpiralProjectileSpawner(200, 675, 0f, 0f, 1f, 0, 0, 15f, 1);
 					masterProjectileController.addMulitSpiralProjectileSpawner(1000, 550, 0f, 0f, 1f, (float) Math.PI, 0, 15f, 1);
 					this.pMask.Activate();
-				} else if (turnCounter == 3) {
+				} else if (turnCounter == 3){
+					this.player.setColor(new Vector3f(0,0,1));
+					masterProjectileController.addMulitSpiralProjectileSpawner(200, 675, 0f, 0f, 1f, 0, 0, 15f, 1);
+					masterProjectileController.addMulitSpiralProjectileSpawner(1000, 675, 0f, 0f, 1f, (float) Math.PI, 0, 15f, 1);
+					masterProjectileController.addMulitSpiralProjectileSpawner(1000, 550, 0f, 0f, 1f, (float) Math.PI, 0, 15f, 1);
+					masterProjectileController.addMulitSpiralProjectileSpawner(200, 550, 0f, 0f, 1f, 0, 0, 15f, 1);
+					this.pMask.Activate();
+				} else if (turnCounter == 4) {
 					
 					this.player.setColor(new Vector3f(1,0,0));
 					int i = 0;
@@ -263,7 +285,7 @@ public class MasterTurnController {
 					}
 					this.turnTimer = 50;
 					this.pMask.Deactivate();
-				} else if (turnCounter == 0){
+				} else if (turnCounter == 5){
 					this.player.setColor(new Vector3f(1,0,0));
 					masterProjectileController.addMulitSpiralProjectileSpawner(0, 75, 0.5f, 0f, 1f, 0f, 17, 1f, 2);
 					masterProjectileController.addMulitSpiralProjectileSpawner(1280, 75, 0.5f, (float) Math.PI, 1f, 0f, 17, 1f, 2);
@@ -299,7 +321,7 @@ public class MasterTurnController {
 		this.player.setMenuMode();
 		this.player.resetBounds();
 		player.setGravityDirection(0); 						// Set gravity direction to down
-		ps.TextMode();
+		playSpace.TextMode();
 		this.pMask.Deactivate();
 		this.menu.subMenu_options.get(0).show();
 		this.menu.subMenu_options.get(0).setText("You feel the Ocean weighting you down");
@@ -311,7 +333,7 @@ public class MasterTurnController {
 	}
 	
 	public void initStartEntities(){
-		entities.add(ps);
+		entities.add(playSpace);
 		entities.add(SB);
 		entities.add(menu);						// menu attack animation is above Spongebob
 		entities.add(player);
@@ -359,7 +381,7 @@ public class MasterTurnController {
 		ArrayList<Projectile> projectiles = masterProjectileController.getAllProjectiles();
 		for (int i = 0; i < projectiles.size(); i++){
 			float d = distance(player, projectiles.get(i));
-			if (2*d< projectiles.get(i).size + player.size){				// TODO fix collision (It's a bit weird)
+			if (2*d< projectiles.get(i).size + player.size){					// TODO fix collision (It's a bit weird)
 				//System.out.println("hit");									// It seems to detect a collision when there isn't really one there.
 				if (hitTimer < 0){
 					playerHitSFX.play(soulHitBuffer);

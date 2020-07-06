@@ -10,7 +10,7 @@ import engineTester.Clock;
 
 public class MultiTyper extends Entity{
 
-	public int fontsize;
+	public int fontSize;
 	public ArrayList<String> text, currentText;
 	private TrueTypeFont font;
 	private boolean renderStar;
@@ -23,10 +23,10 @@ public class MultiTyper extends Entity{
 	
 	public MultiTyper(float x, float y, int fontSize, ArrayList<String> String) {
 		super(x, y);
-		this.fontsize = fontSize;
+		this.fontSize = fontSize;
 		this.text = String;
 		
-		Font awtFont = new Font("consolas", Font.PLAIN, fontsize); //name, style (PLAIN, BOLD, or ITALIC), size
+		Font awtFont = new Font("consolas", Font.PLAIN, fontSize); //name, style (PLAIN, BOLD, or ITALIC), size
 		this.font = new TrueTypeFont(awtFont, false); //base Font, anti-aliasing true/false
 		
 		this.hide = false;
@@ -42,7 +42,7 @@ public class MultiTyper extends Entity{
 			font.drawString(super.getX()-30, super.getY()+10, "*", Color.white);		// magic numbers for alignment
 		}
 		for (int i = 0; i < currentText.size(); i++){
-			font.drawString(super.getX(), (float) (super.getY()+i*this.fontsize), currentText.get(i), Color.white);
+			font.drawString(super.getX(), (float) (super.getY()+i*this.fontSize), currentText.get(i), Color.white);
 		}
 		
 	}
@@ -115,5 +115,29 @@ public class MultiTyper extends Entity{
 	
 	public void show(){
 		this.hide = false;
+	}
+	
+	public void setFontSize(int fontSize){
+		this.fontSize = fontSize;
+	}
+	
+	public int getFontSize(){
+		return this.fontSize;
+	}
+	
+	public void setX(float x){
+		super.setX(x);
+	}
+	
+	public float getX(){
+		return super.getX();
+	}
+	
+	public void setY(float y){
+		super.setY(y);
+	}
+	
+	public float getY(){
+		return super.getY();
 	}
 }
