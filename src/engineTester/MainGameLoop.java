@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
+import UI.GameMenu;
 import audio.AudioMaster;
 import audio.Source;
 import entities.Background;
@@ -40,7 +41,7 @@ public class MainGameLoop {
 		int x = 1280;
 		int y = 960; 
 		
-		
+		GameMenu gameMenu = new GameMenu(0,0); 
 		
 		while (!Display.isCloseRequested()) {
 			
@@ -53,7 +54,13 @@ public class MainGameLoop {
 			//GL11.glTranslatef(camera.getX(), camera.getY(), 0);
 			
 			Clock.update();
-			turnController.update();
+
+			if (gameMenu.playerRequestToPlay()){
+				turnController.update();
+			} else {
+				gameMenu.update();
+				gameMenu.render();
+			}
 
 		}
 

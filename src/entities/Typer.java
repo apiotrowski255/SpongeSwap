@@ -102,4 +102,13 @@ public class Typer extends Entity{
 		return this.getCurrentText() == this.getText();
 	}
 	
+	public int getfontsize(){
+		return this.fontsize;
+	}
+	
+	public void setfontsize(int fontsize){
+		this.fontsize = fontsize;
+		Font awtFont = new Font(Font.SERIF, Font.PLAIN, fontsize); 	//name, style (PLAIN, BOLD, or ITALIC), size
+		this.font = new TrueTypeFont(awtFont, false); 				//base Font, anti-aliasing true/false
+	}
 }

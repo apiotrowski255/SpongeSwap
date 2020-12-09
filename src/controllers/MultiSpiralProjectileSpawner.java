@@ -7,8 +7,8 @@ public class MultiSpiralProjectileSpawner {
 	public ArrayList<SingleSpiralProjectileSpawner> SpiralProjectileSpawners;
 	
 	float x, y, speed, direction;
-	
-	public MultiSpiralProjectileSpawner(float x, float y, float speed, float direction, float projectileSpeed, float startAngle, float angleDifference, float delay, int leaves){
+	public int projectileSize;
+	public MultiSpiralProjectileSpawner(float x, float y, float speed, float direction, float projectileSpeed, float startAngle, float angleDifference, float delay, int leaves, int projectileSize){
 		this.x = x;
 		this.y = y;
 		this.speed = speed;
@@ -18,10 +18,10 @@ public class MultiSpiralProjectileSpawner {
 		this.SpiralProjectileSpawners = new ArrayList<SingleSpiralProjectileSpawner>();
 		
 		float angle = (float) (2*Math.PI / leaves);
-		
+		this.projectileSize = projectileSize;
 		int i = 0;
 		while (i < leaves){
-			SpiralProjectileSpawners.add(new SingleSpiralProjectileSpawner(x, y, speed, direction, startAngle + angle*i, angleDifference, delay));
+			SpiralProjectileSpawners.add(new SingleSpiralProjectileSpawner(x, y, speed, direction, startAngle + angle*i, angleDifference, delay, projectileSize));
 			i += 1;
 		}
 	}

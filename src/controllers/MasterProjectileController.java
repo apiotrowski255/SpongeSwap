@@ -23,12 +23,12 @@ public class MasterProjectileController {
 		JellyFishProjectiles.add(new JellyFish(x, y, size, direction, timer));
 	}
 	
-	public void addMulitSpiralProjectileSpawner(float x, float y, float speed, float direction, float projectileSpeed, float startAngle, float angleDifference, float delay, int leaves){
-		MultiProjectileSpawners.add(new MultiSpiralProjectileSpawner(x, y, speed, direction, projectileSpeed, startAngle, angleDifference, delay, leaves));
+	public void addMulitSpiralProjectileSpawner(float x, float y, float speed, float direction, float projectileSpeed, float startAngle, float angleDifference, float delay, int leaves, int projectileSize){
+		MultiProjectileSpawners.add(new MultiSpiralProjectileSpawner(x, y, speed, direction, projectileSpeed, startAngle, angleDifference, delay, leaves, projectileSize));
 	}
 	
-	public void addSingleSpiralProjectileSpawner(float x, float y, float speed, float direction, float startAngle, float angleDifference, float delay){
-		SpiralProjectileSpawners.add(new SingleSpiralProjectileSpawner(x, y, speed, direction, startAngle, angleDifference, delay));
+	public void addSingleSpiralProjectileSpawner(float x, float y, float speed, float direction, float startAngle, float angleDifference, float delay, int projectileSize){
+		SpiralProjectileSpawners.add(new SingleSpiralProjectileSpawner(x, y, speed, direction, startAngle, angleDifference, delay, projectileSize));
 	}
 	
 	public void addExplosionProjectileSpawner(float x, float y, float delay, int numberOfProjectiles, int projectileSize){

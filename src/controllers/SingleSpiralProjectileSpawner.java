@@ -12,8 +12,9 @@ public class SingleSpiralProjectileSpawner {
 	public int incrementer;
 	private ArrayList<Projectile> projectiles;
 	private float startAngle;
+	public int size;
 	
-	public SingleSpiralProjectileSpawner(float x, float y, float spawnerSpeed, float direction, float startAngle, float angleDifference, float delay){
+	public SingleSpiralProjectileSpawner(float x, float y, float spawnerSpeed, float direction, float startAngle, float angleDifference, float delay, int size){
 		this.x = x;
 		this.y = y;
 		this.spawnerSpeed = spawnerSpeed;
@@ -24,10 +25,11 @@ public class SingleSpiralProjectileSpawner {
 		this.projectiles = new ArrayList<Projectile>();
 		this.timeSinceLastShot = 0f;
 		this.incrementer = 0;
+		this.size = size;
 	}
 	
 	public void update(){
-		entitySpiralSpawner(angleDifference, delay);
+		entitySpiralSpawner(angleDifference, delay, size);
 		
 		for (Projectile p : projectiles){
 			p.update();
@@ -35,9 +37,9 @@ public class SingleSpiralProjectileSpawner {
 		}
 	}
 	
-	public void entitySpiralSpawner(float angleDifference, float delay){		
+	public void entitySpiralSpawner(float angleDifference, float delay, int size){		
 		if (timeSinceLastShot > delay){
-			shootProjectile(x, y, 1, (float) (angleDifference * incrementer * Math.PI / 180) + startAngle, 64);
+			shootProjectile(x, y, 1, (float) (angleDifference * incrementer * Math.PI / 180) + startAngle, size);
 			timeSinceLastShot = 0;
 			incrementer++;
 		}

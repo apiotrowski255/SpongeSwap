@@ -27,7 +27,7 @@ public class MultiTyper extends Entity{
 		this.text = String;
 		
 		Font awtFont = new Font("consolas", Font.PLAIN, fontSize); //name, style (PLAIN, BOLD, or ITALIC), size
-		this.font = new TrueTypeFont(awtFont, false); //base Font, anti-aliasing true/false
+		this.setFont(new TrueTypeFont(awtFont, false)); //base Font, anti-aliasing true/false
 		
 		this.hide = false;
 		this.renderStar = false;
@@ -39,10 +39,10 @@ public class MultiTyper extends Entity{
 		if (hide)
 			return;
 		if (renderStar){
-			font.drawString(super.getX()-30, super.getY()+10, "*", Color.white);		// magic numbers for alignment
+			getFont().drawString(super.getX()-30, super.getY()+10, "*", Color.white);		// magic numbers for alignment
 		}
 		for (int i = 0; i < currentText.size(); i++){
-			font.drawString(super.getX(), (float) (super.getY()+i*this.fontSize), currentText.get(i), Color.white);
+			getFont().drawString(super.getX(), (float) (super.getY()+i*this.fontSize), currentText.get(i), Color.white);
 		}
 		
 	}
@@ -139,5 +139,13 @@ public class MultiTyper extends Entity{
 	
 	public float getY(){
 		return super.getY();
+	}
+
+	public TrueTypeFont getFont() {
+		return font;
+	}
+
+	public void setFont(TrueTypeFont font) {
+		this.font = font;
 	}
 }
