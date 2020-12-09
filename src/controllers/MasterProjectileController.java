@@ -41,6 +41,14 @@ public class MasterProjectileController {
 		singleSpiralSpawnersUpdate();
 		multiSpiralSpawnersUpdate();
 		ExplosionProjectileSpawnersUpdate();
+		JellFishProjectilesUpdate();
+	}
+	
+	public void JellFishProjectilesUpdate(){
+		for (JellyFish j : JellyFishProjectiles){
+			j.update();
+			j.render();
+		}
 	}
 	
 	public void ExplosionProjectileSpawnersUpdate(){

@@ -17,31 +17,46 @@ public class JellyFish extends Entity{
 	private float size, direction, timer;
 	private int state;
 	private float timeSinceLastShot;
-	
+	private float currentX, currentY;
+	/*
+	 * direction is in degrees (not radians)
+	 * 
+	 */
 	
 	public JellyFish(float x, float y, float size, float direction, float timer) {
-		super(0, 0);
+		super(x, y); 	// x and y are treated as the target coordinates of the jellyfish.
 		this.size = size;
 		this.direction = direction;
 		this.texture = Shapes.LoadTexture("res/JellyFish_prepare.png", "PNG");
 		this.timer = timer;
 		this.state = PREPARE;
 		this.timeSinceLastShot = 0;
+		this.currentX = 0;
+		this.currentY = 0;
 	}
 
 	@Override
 	public void render() {
 		GL11.glEnable(GL_TEXTURE_2D);
 		GL11.glColor3f(1,1,1);
-		Shapes.DrawQuadTexRot(texture, super.getX(), super.getY(), size, size, direction);
+		Shapes.DrawQuadTexRot(texture, currentX, currentY, size, size, direction);
 		
 	}
 
 	@Override
 	public void update() {
 		if (state == PREPARE){
-			super.setX(super.getX() + 1);
-			super.setY(super.getY() + 1);
+			if (currentX < super.getX()) {
+				currentX++;
+			} else if (currentX > super.getX()) {
+				currentX--;
+			}
+			
+			if (currentY < super.getY()) {
+				currentY++;
+			} else if (currentY > super.getX()) {
+				currentY--;
+			}
 		}
 		
 		if (timeSinceLastShot >= timer){
@@ -50,11 +65,12 @@ public class JellyFish extends Entity{
 			timeSinceLastShot = 0;
 		}
 
-		timeSinceLastShot += Clock.getDelta();
+		timeSinceLastShot += Clock.Delta();
 	}
 	
 	public void shoot(){
-		texture = Shapes.LoadTexture("res/JellyFish_shoot.png", "PNG");
+		System.out.println("shooting!");
+		this.texture = Shapes.LoadTexture("res/JellyFish_shoot.png", "PNG");
 	}
 	
 	

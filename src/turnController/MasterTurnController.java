@@ -268,20 +268,17 @@ public class MasterTurnController {
 				this.player.setPlayMode();
 				
 				if (turnCounter == 0) {
-					masterProjectileController.addMulitSpiralProjectileSpawner(200, 706, 0f, 0f, 1f, 0, 0, 15f, 1, 32);
+					masterProjectileController.addJellyFishProjectile(480, 200, 128, 270, 100);
 				} else if (turnCounter == 1){
 					masterProjectileController.addMulitSpiralProjectileSpawner(200, 706, 0f, 0f, 1f, 0, 0, 15f, 1, 32);
 					masterProjectileController.addMulitSpiralProjectileSpawner(1000, 706, 0f, 0f, 1f, (float) Math.PI, 0, 15f, 1, 32);
 				} else if (turnCounter == 2){
 					masterProjectileController.addMulitSpiralProjectileSpawner(200, 675, 0f, 0f, 1f, 0, 0, 15f, 1, 64);
 					this.pMask.Activate();
-				
 				} else if (turnCounter == 3){
-				
 					masterProjectileController.addMulitSpiralProjectileSpawner(200, 706, 0f, 0f, 1f, 0, 0, 15f, 1, 32);
 					masterProjectileController.addMulitSpiralProjectileSpawner(1000, 550, 0f, 0f, 1f, (float) Math.PI, 0, 15f, 1, 32);
-				
-				
+					this.pMask.Activate();
 				} else if (turnCounter == 4) {
 					this.player.setColor(new Vector3f(0,0,1));
 					masterProjectileController.addMulitSpiralProjectileSpawner(200, 675, 0f, 0f, 1f, 0, 0, 15f, 1, 64);
@@ -315,7 +312,16 @@ public class MasterTurnController {
 					masterProjectileController.addMulitSpiralProjectileSpawner(0, 75, 0.5f, 0f, 1f, 0f, 17, 1f, 2, 32);
 					masterProjectileController.addMulitSpiralProjectileSpawner(1280, 75, 0.5f, (float) Math.PI, 1f, 0f, 17, 1f, 2, 32);
 					this.pMask.Deactivate();
+				} else if (turnCounter == 9){
+					this.player.setColor(new Vector3f(1,0,0));
+					masterProjectileController.addMulitSpiralProjectileSpawner(0, 75, 1f, 0f, 1f, 0f, 17, 1f, 2, 64);
+					masterProjectileController.addMulitSpiralProjectileSpawner(1280, 75, 1f, (float) Math.PI, 1f, 0f, 17, 1f, 2, 64);
+					this.pMask.Deactivate();
+				} else if (turnCounter == 10){
+					this.player.setColor(new Vector3f(0,0,1));
+					masterProjectileController.addMulitSpiralProjectileSpawner(200, 706, 0f, 0f, 1f, 0, 0, 15f, 1, 32);
 				}
+				
 				this.testMultiTyper.hide();
 				this.testMultiTyper.clearText();
 			} 
@@ -370,7 +376,7 @@ public class MasterTurnController {
 		entities.add(player);
 	}
 	
-	//Respawns projectiles.
+	// Respawns projectiles.
 	public static void entity_controller(ArrayList<Entity> entities){
 		if (entities.size() <= 100){
 			Random r = new Random();

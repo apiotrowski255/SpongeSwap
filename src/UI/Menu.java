@@ -126,9 +126,7 @@ public class Menu extends Entity {
 		} else if (mode == SUB) {
 			// System.out.println(this.menuController);
 			// State Controls
-			if (this.menuController.equals(new ArrayList<String>() { // A small
-																		// pause
-																		// for
+			if (this.menuController.equals(new ArrayList<String>() { // A small pause for
 																		// the
 																		// fight
 																		// animation
