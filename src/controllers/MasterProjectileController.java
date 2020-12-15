@@ -19,8 +19,8 @@ public class MasterProjectileController {
 		this.JellyFishProjectiles = new ArrayList<JellyFish>();
 	}
 	
-	public void addJellyFishProjectile(float x, float y, int size, float direction, float timer){
-		JellyFishProjectiles.add(new JellyFish(x, y, size, direction, timer));
+	public void addJellyFishProjectile(float x, float y, int size, float direction, float travelTime, float timer){
+		JellyFishProjectiles.add(new JellyFish(x, y, size, direction, travelTime, timer));
 	}
 	
 	public void addMulitSpiralProjectileSpawner(float x, float y, float speed, float direction, float projectileSpeed, float startAngle, float angleDifference, float delay, int leaves, int projectileSize){
@@ -120,6 +120,12 @@ public class MasterProjectileController {
 		
 		for (SingleExplosionProjectileSpawner s : SingleExplosionProjectileSpawners){
 			for (Projectile p : s.getProjectiles()){
+				projectiles.add(p);
+			}
+		}
+		
+		for (JellyFish j : JellyFishProjectiles){
+			for (Projectile p : j.getProjectiles()){
 				projectiles.add(p);
 			}
 		}

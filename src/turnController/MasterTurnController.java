@@ -96,8 +96,6 @@ public class MasterTurnController {
 		// init
 		initStartEntities();
 		
-		jf = new JellyFish(100, 100, 32, 0, 10);
-		
 		//entities.add(jf);
 		
 		this.turnCounter = 0;
@@ -268,7 +266,7 @@ public class MasterTurnController {
 				this.player.setPlayMode();
 				
 				if (turnCounter == 0) {
-					masterProjectileController.addJellyFishProjectile(480, 200, 128, 270, 100);
+					masterProjectileController.addJellyFishProjectile(280, 600, 128, 0, 100, 20);
 				} else if (turnCounter == 1){
 					masterProjectileController.addMulitSpiralProjectileSpawner(200, 706, 0f, 0f, 1f, 0, 0, 15f, 1, 32);
 					masterProjectileController.addMulitSpiralProjectileSpawner(1000, 706, 0f, 0f, 1f, (float) Math.PI, 0, 15f, 1, 32);
