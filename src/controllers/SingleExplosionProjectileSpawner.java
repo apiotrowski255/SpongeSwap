@@ -7,12 +7,12 @@ import entities.Projectile;
 
 public class SingleExplosionProjectileSpawner {
 
-	public float x, y, delay;
+	public float x, y, delay, startAngle;
 	public int numberOfProjectiles, projectileSize;
 	public ArrayList<Projectile> projectiles;
 	public boolean shoot;
 	
-	public SingleExplosionProjectileSpawner(float x, float y, float delay, int numberOfProjectiles, int projectileSize){
+	public SingleExplosionProjectileSpawner(float x, float y, float delay, float startAngle, int numberOfProjectiles, int projectileSize){
 		this.x = x;
 		this.y = y;
 		this.delay = delay;
@@ -20,6 +20,7 @@ public class SingleExplosionProjectileSpawner {
 		this.projectileSize = projectileSize;
 		this.projectiles = new ArrayList<Projectile>();
 		this.shoot = false;
+		this.startAngle = startAngle;
 	}
 	
 	public void update(){
@@ -42,7 +43,7 @@ public class SingleExplosionProjectileSpawner {
 		float angleDiff = (float) (2 * Math.PI / numberOfProjectiles);
 		int i = 0;
 		while (i < numberOfProjectiles){
-			shootProjectile(x, y, 2, angleDiff * i, projectileSize);
+			shootProjectile(x, y, 2, startAngle + angleDiff * i, projectileSize);
 			i += 1;
 		}
 	}

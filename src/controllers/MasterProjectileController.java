@@ -3,6 +3,7 @@ package controllers;
 import java.util.ArrayList;
 
 import entities.JellyFish;
+import entities.Player;
 import entities.Projectile;
 
 public class MasterProjectileController {
@@ -19,8 +20,15 @@ public class MasterProjectileController {
 		this.JellyFishProjectiles = new ArrayList<JellyFish>();
 	}
 	
-	public void addJellyFishProjectile(float x, float y, int size, float direction, float travelTime, float timer){
-		JellyFishProjectiles.add(new JellyFish(x, y, size, direction, travelTime, timer));
+	
+	// This method will aim the jelly fish at the player
+	public void addJellyFishProjectile(float x, float y, float delay, int size, float direction, float travelTime, float timer, Player player){
+		JellyFishProjectiles.add(new JellyFish(x, y, delay, size, direction, travelTime, timer, player));
+	}
+	
+	// This method will set the target x and y position for the jelly fish to travel to.
+	public void addJellyFishProjectile(float x, float y, float delay, int size, float direction, float travelTime, float timer){
+		JellyFishProjectiles.add(new JellyFish(x, y, delay, size, direction, travelTime, timer));
 	}
 	
 	public void addMulitSpiralProjectileSpawner(float x, float y, float speed, float direction, float projectileSpeed, float startAngle, float angleDifference, float delay, int leaves, int projectileSize){
@@ -31,8 +39,8 @@ public class MasterProjectileController {
 		SpiralProjectileSpawners.add(new SingleSpiralProjectileSpawner(x, y, speed, direction, startAngle, angleDifference, delay, projectileSize));
 	}
 	
-	public void addExplosionProjectileSpawner(float x, float y, float delay, int numberOfProjectiles, int projectileSize){
-		SingleExplosionProjectileSpawner explosionProjectileSpawner = new SingleExplosionProjectileSpawner(x, y, delay, numberOfProjectiles, projectileSize);
+	public void addExplosionProjectileSpawner(float x, float y, float delay, float startAngle, int numberOfProjectiles, int projectileSize){
+		SingleExplosionProjectileSpawner explosionProjectileSpawner = new SingleExplosionProjectileSpawner(x, y, delay, startAngle, numberOfProjectiles, projectileSize);
 		SingleExplosionProjectileSpawners.add(explosionProjectileSpawner);
 	}
 	
@@ -41,6 +49,10 @@ public class MasterProjectileController {
 		singleSpiralSpawnersUpdate();
 		multiSpiralSpawnersUpdate();
 		ExplosionProjectileSpawnersUpdate();
+
+	}
+	
+	public void updateJellyFish(){
 		JellFishProjectilesUpdate();
 	}
 	
@@ -94,6 +106,7 @@ public class MasterProjectileController {
 		SpiralProjectileSpawners.clear();
 		MultiProjectileSpawners.clear();
 		SingleExplosionProjectileSpawners.clear();
+		JellyFishProjectiles.clear();
 	}
 	
 	public ArrayList<SingleSpiralProjectileSpawner> getSpiralProjectileSpawners(){

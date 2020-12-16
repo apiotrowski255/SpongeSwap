@@ -43,11 +43,9 @@ public class MasterTurnController {
 	public static float timeSinceLastShot;
 	
 	private MasterProjectileController masterProjectileController;
-	private HitBox HB1;
 	private Background bg;
 	private Player player;
 	private PlaySpace playSpace;
-	private JellyFish jf;
 	private Menu menu;
 	private SpongeBob SB;
 	private ProjectileMask pMask;
@@ -64,7 +62,7 @@ public class MasterTurnController {
 	private int soulHitBuffer;
 	private Source playerHitSFX;
 	private float hitTimer;
-	private final float HITDELAY = 1;
+	private final float HITDELAY = 2;
 	
 	
 	// middle state keyboard controls
@@ -193,18 +191,26 @@ public class MasterTurnController {
 				this.turnTimer = 50;		// default of 5 second for enemy turn (5 seconds of enemy talking)
 				this.testMultiTyper.clearCurrentText();
 				if (turnCounter == 0){
-					this.testMultiTyper.addText("I forgive you...");
+					this.testMultiTyper.addText("What?");
+					this.testMultiTyper.addText("Expect me to go all out?");
 				} else if (turnCounter == 1){
+					this.testMultiTyper.addText("Trust me");
+					this.testMultiTyper.addText("Even i don't want this fight");
+				} else if (turnCounter == 2) {
+					this.testMultiTyper.addText("You did strike first");
+				} else if (turnCounter == 3){
+					this.testMultiTyper.addText("I forgive you...");
+				} else if (turnCounter == 4){
 					this.testMultiTyper.addText("I forgive you...");
 					this.testMultiTyper.addText("Even if you don't");
-				} else if (turnCounter == 2){
+				} else if (turnCounter == 5){
 					this.testMultiTyper.addText("You can still fix this,");
 					this.testMultiTyper.addText("Only if you want.");
-				} else if (turnCounter == 3){ 
+				} else if (turnCounter == 6){ 
 					this.testMultiTyper.addText("I still think about Patrick.");
-				} else if (turnCounter == 4){
-					this.testMultiTyper.addText("I wonder what life could have been like");
-					this.testMultiTyper.addText("If i had made different choices.");
+				} else if (turnCounter == 7){
+					this.testMultiTyper.addText("I wonder what life could ");
+					this.testMultiTyper.addText("have been like");
 				} else {
 					this.testMultiTyper.addText("I need more lines");
 				}
@@ -217,7 +223,7 @@ public class MasterTurnController {
 			turnTimer -= Clock.Delta();
 			
 			// change player gravity direction while in the middle of dodging projectiles
-			if (turnCounter == 5 || turnCounter == 3){
+			if (turnCounter == 7 || turnCounter == 5){
 				if (turnTimer < 75 && this.player.getGravityDirection() != this.player.UP){
 					this.player.setGravityDirection(this.player.UP);
 					this.player.gravity = 5;
@@ -265,57 +271,79 @@ public class MasterTurnController {
 				this.turnTimer = 150;
 				this.player.setPlayMode();
 				
-				if (turnCounter == 0) {
-					masterProjectileController.addJellyFishProjectile(280, 600, 128, 0, 100, 20);
+				if (turnCounter == 0){
+					int i = 0;
+					while (i < 10){
+						if (i % 2 == 0){
+							masterProjectileController.addExplosionProjectileSpawner(640, 300, 3 * i, 0, 20, 32);
+						} else {
+							masterProjectileController.addExplosionProjectileSpawner(640, 300, 3 * i, (float) (Math.PI/20), 20, 32);
+						}
+						i++;
+					}
+					this.turnTimer = 70;
+					this.pMask.Deactivate();
 				} else if (turnCounter == 1){
+					masterProjectileController.addJellyFishProjectile(200, 570, 40, 128, 0, 150, 10);
+					masterProjectileController.addMulitSpiralProjectileSpawner(200, 706, 0f, 0f, 1f, 0, 0, 15f, 1, 32);
+					this.turnTimer = 100;
+					this.pMask.Activate();
+				} else if (turnCounter == 2) {
+					int i = 0;
+					while (i < 80){
+						masterProjectileController.addJellyFishProjectile(0, 400, 10 * i, 128, 90, 150, 10, player);
+						i++;
+					}
+					this.turnTimer = 120;
+				} else if (turnCounter == 3){
 					masterProjectileController.addMulitSpiralProjectileSpawner(200, 706, 0f, 0f, 1f, 0, 0, 15f, 1, 32);
 					masterProjectileController.addMulitSpiralProjectileSpawner(1000, 706, 0f, 0f, 1f, (float) Math.PI, 0, 15f, 1, 32);
-				} else if (turnCounter == 2){
+				} else if (turnCounter == 4){
 					masterProjectileController.addMulitSpiralProjectileSpawner(200, 675, 0f, 0f, 1f, 0, 0, 15f, 1, 64);
 					this.pMask.Activate();
-				} else if (turnCounter == 3){
+				} else if (turnCounter == 5){
 					masterProjectileController.addMulitSpiralProjectileSpawner(200, 706, 0f, 0f, 1f, 0, 0, 15f, 1, 32);
 					masterProjectileController.addMulitSpiralProjectileSpawner(1000, 550, 0f, 0f, 1f, (float) Math.PI, 0, 15f, 1, 32);
 					this.pMask.Activate();
-				} else if (turnCounter == 4) {
+				} else if (turnCounter == 6) {
 					this.player.setColor(new Vector3f(0,0,1));
 					masterProjectileController.addMulitSpiralProjectileSpawner(200, 675, 0f, 0f, 1f, 0, 0, 15f, 1, 64);
 					masterProjectileController.addMulitSpiralProjectileSpawner(1000, 675, 0f, 0f, 1f, (float) Math.PI, 0, 15f, 1, 64);
 					this.pMask.Activate();
-				} else if (turnCounter == 5){
+				} else if (turnCounter == 7){
 					this.player.setColor(new Vector3f(0,0,1));
 					masterProjectileController.addMulitSpiralProjectileSpawner(200, 675, 0f, 0f, 1f, 0, 0, 15f, 1, 64);
 					masterProjectileController.addMulitSpiralProjectileSpawner(1000, 550, 0f, 0f, 1f, (float) Math.PI, 0, 15f, 1, 64);
 					this.pMask.Activate();
-				} else if (turnCounter == 6){
+				} else if (turnCounter == 8){
 					this.player.setColor(new Vector3f(0,0,1));
 					masterProjectileController.addMulitSpiralProjectileSpawner(200, 675, 0f, 0f, 1f, 0, 0, 15f, 1, 64);
 					masterProjectileController.addMulitSpiralProjectileSpawner(1000, 675, 0f, 0f, 1f, (float) Math.PI, 0, 15f, 1, 64);
 					masterProjectileController.addMulitSpiralProjectileSpawner(1000, 550, 0f, 0f, 1f, (float) Math.PI, 0, 15f, 1, 64);
 					masterProjectileController.addMulitSpiralProjectileSpawner(200, 550, 0f, 0f, 1f, 0, 0, 15f, 1, 64);
 					this.pMask.Activate();
-				} else if (turnCounter == 7) {
+				} else if (turnCounter == 9) {
 					
 					this.player.setColor(new Vector3f(1,0,0));
 					int i = 0;
 					int limit = 20;
 					while (i < limit){
-						masterProjectileController.addExplosionProjectileSpawner((float) (Math.random() * 1200), (float) (Math.random() * 400), (float) (Math.random() * 50), 20, 32);
+						masterProjectileController.addExplosionProjectileSpawner((float) (Math.random() * 1200), (float) (Math.random() * 400), (float) (Math.random() * 50), 0, 20, 32);
 						i += 1;
 					}
 					this.turnTimer = 50;
 					this.pMask.Deactivate();
-				} else if (turnCounter == 8){
+				} else if (turnCounter == 10){
 					this.player.setColor(new Vector3f(1,0,0));
 					masterProjectileController.addMulitSpiralProjectileSpawner(0, 75, 0.5f, 0f, 1f, 0f, 17, 1f, 2, 32);
 					masterProjectileController.addMulitSpiralProjectileSpawner(1280, 75, 0.5f, (float) Math.PI, 1f, 0f, 17, 1f, 2, 32);
 					this.pMask.Deactivate();
-				} else if (turnCounter == 9){
+				} else if (turnCounter == 11){
 					this.player.setColor(new Vector3f(1,0,0));
 					masterProjectileController.addMulitSpiralProjectileSpawner(0, 75, 1f, 0f, 1f, 0f, 17, 1f, 2, 64);
 					masterProjectileController.addMulitSpiralProjectileSpawner(1280, 75, 1f, (float) Math.PI, 1f, 0f, 17, 1f, 2, 64);
 					this.pMask.Deactivate();
-				} else if (turnCounter == 10){
+				} else if (turnCounter == 12){
 					this.player.setColor(new Vector3f(0,0,1));
 					masterProjectileController.addMulitSpiralProjectileSpawner(200, 706, 0f, 0f, 1f, 0, 0, 15f, 1, 32);
 				}
@@ -332,10 +360,13 @@ public class MasterTurnController {
 		pMask.update();
 		pMask.render();
 		
+		// Jelly Fish need to be above the mask
+		masterProjectileController.updateJellyFish();
+		
 		//clean_up_entities(entities);
 
 		
-		// audio handler
+		// audio handler to replay/loop the music
 		if (audioTimer < 0){
 			source.play(buffer);
 			audioTimer = SOUNDTRACKLENGTH;

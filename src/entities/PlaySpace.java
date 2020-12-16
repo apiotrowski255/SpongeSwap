@@ -99,7 +99,7 @@ public class PlaySpace extends Entity{
 		ySpeed = (oldy - y)/time;
 		heightSpeed = (oldheight - height)/time;
 		widthSpeed = (oldwidth - width)/time;
-		counter = 4*time; 						// needs to be multiplied by 4 since there are 4 factor x, y, width and height that need to be changed
+		counter = 4*time; 						// needs to be multiplied by 4 since there are 4 factors - x, y, width and height that need to be changed
 	}
 	
 	public void TextMode(){
