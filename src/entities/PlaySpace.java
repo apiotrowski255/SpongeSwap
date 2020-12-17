@@ -43,6 +43,10 @@ public class PlaySpace extends Entity{
 	
 	public void render(){
 		GL11.glDisable(GL_TEXTURE_2D);
+		
+		GL11.glColor3f(0, 0, 0);
+		Shapes.draw_quad(x, y, width, height);
+		
 		GL11.glColor3f(1, 1, 1);
 		Shapes.drawBox(x, y, width, height, strokeWidth);
 	}

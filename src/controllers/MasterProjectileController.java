@@ -22,8 +22,8 @@ public class MasterProjectileController {
 	
 	
 	// This method will aim the jelly fish at the player
-	public void addJellyFishProjectile(float x, float y, float delay, int size, float direction, float travelTime, float timer, Player player){
-		JellyFishProjectiles.add(new JellyFish(x, y, delay, size, direction, travelTime, timer, player));
+	public void addJellyFishProjectile(float delay, int size, float travelTime, float timer, Player player, float distance, float direction){
+		JellyFishProjectiles.add(new JellyFish(delay, size, travelTime, timer, player, distance, direction));
 	}
 	
 	// This method will set the target x and y position for the jelly fish to travel to.
@@ -35,8 +35,8 @@ public class MasterProjectileController {
 		MultiProjectileSpawners.add(new MultiSpiralProjectileSpawner(x, y, speed, direction, projectileSpeed, startAngle, angleDifference, delay, leaves, projectileSize));
 	}
 	
-	public void addSingleSpiralProjectileSpawner(float x, float y, float speed, float direction, float startAngle, float angleDifference, float delay, int projectileSize){
-		SpiralProjectileSpawners.add(new SingleSpiralProjectileSpawner(x, y, speed, direction, startAngle, angleDifference, delay, projectileSize));
+	public void addSingleSpiralProjectileSpawner(float x, float y, float speed, float direction, float startAngle, float angleDifference, float delay, int projectileSize, float projectileSpeed){
+		SpiralProjectileSpawners.add(new SingleSpiralProjectileSpawner(x, y, speed, direction, startAngle, angleDifference, delay, projectileSize, projectileSpeed));
 	}
 	
 	public void addExplosionProjectileSpawner(float x, float y, float delay, float startAngle, int numberOfProjectiles, int projectileSize){

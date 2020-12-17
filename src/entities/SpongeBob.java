@@ -39,9 +39,12 @@ public class SpongeBob extends Entity {
 	private float frame_speed;
 	private boolean animateDown, animateUp, animateLeft, animateRight;
 	
+	private float targetX, targetY;
+	
 	public SpongeBob(float x, float y) {
 		super(x, y);
-		
+		this.targetX = super.getX();
+		this.targetY = super.getY();
 		int size = 4;
 		
 		this.faceXOffset = 11 * size;
@@ -106,8 +109,9 @@ public class SpongeBob extends Entity {
 			animateLeft();
 		} else if (animateRight){
 			animateRight();
-		}
+		}	
 	}
+	
 	
 	public void animateRight(){
 		if (animationTimer > this.frame_speed){

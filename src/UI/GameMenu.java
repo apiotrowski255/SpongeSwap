@@ -1,8 +1,11 @@
 package UI;
 
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+
 import java.util.ArrayList;
 
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.opengl.Texture;
 
 import audio.AudioMaster;
@@ -19,9 +22,11 @@ public class GameMenu extends Entity{
 	public float delay, timeSinceLastPress;
 	
 	// Audio
-	int Attackbuffer, genericMenuSelectBuffer;
-	public Source source;
+	int Attackbuffer, genericMenuSelectBuffer, MenuMusicBuffer;
+	public Source source, MenuMusicSource;
 	private mode mode;
+	
+	private Texture texture;
 	
 	enum mode {
 		MENU,
@@ -32,15 +37,23 @@ public class GameMenu extends Entity{
 		super(x, y);
 		this.selected = 0;
 		this.menu_options = new ArrayList<Button>();
-		this.menu_options.add(new Button(100, 100, "play bar"));
-		this.menu_options.add(new Button(100, 400, "exit bar"));
+		this.menu_options.add(new Button(512, 300, "play bar"));
+		this.menu_options.add(new Button(512, 500, "exit bar"));
 		
 		this.timeSinceLastPress = 0;
 		this.delay = 2f;
 		
 		this.genericMenuSelectBuffer = AudioMaster.loadSound("audio/generic menu selection.wav");
 		this.source = new Source();
+		
+		this.MenuMusicBuffer = AudioMaster.loadSound("audio/Back Once Again.wav");
+		this.MenuMusicSource = new Source();
 		this.mode = mode.MENU;
+		
+		MenuMusicSource.play(MenuMusicBuffer);
+		
+		
+		this.texture = Shapes.LoadTexture("res/spongespin title.png", "PNG");
 	}
 
 	@Override
@@ -49,6 +62,9 @@ public class GameMenu extends Entity{
 			button.render();
 		}
 		
+		GL11.glEnable(GL_TEXTURE_2D);
+		GL11.glColor3f(1, 1, 1);
+		Shapes.DrawQuadTex(texture, 100, 100, 500, 100);
 	}
 
 	@Override
@@ -56,14 +72,17 @@ public class GameMenu extends Entity{
 		// TODO Auto-generated method stub
 		if (Keyboard.isKeyDown(Keyboard.KEY_W)){
 			changeSelect(-1, menu_options.size());
+			MenuMusicSource.unmute();
 		}
 		
 		if (Keyboard.isKeyDown(Keyboard.KEY_S)){
 			changeSelect(1, menu_options.size());
+			MenuMusicSource.mute();
 		}
 		
 		if (Keyboard.isKeyDown(Keyboard.KEY_RETURN)){
 			this.mode = mode.PLAY;
+			
 		}
 		
 		timeSinceLastPress += Clock.Delta();

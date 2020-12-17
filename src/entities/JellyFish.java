@@ -40,14 +40,15 @@ public class JellyFish extends Entity{
 	
 	
 	private Player player;
+	private float distance;
 	// direction is in degrees (not radians)
 
 	
-	public JellyFish(float x, float y, float delay, float size, float direction, float travelTime, float timer, Player player) {
-		super(x, y); 	// x and y are treated as the target coordinates of the jellyfish.
+	public JellyFish(float delay, float size, float travelTime, float timer, Player player, float distance, float direction) {
+		super(0, 0); 	// x and y are treated as the target coordinates of the jellyfish.
+						// In this case it is zero since the calculation is done at travel time. 
 		this.size = size;
-		this.targetDirection = direction;
-		this.currentDirection = direction - 360;
+
 		this.texture = Shapes.LoadTexture("res/JellyFish_prepare.png", "PNG");
 		this.timer = timer;
 		this.state = WAIT;
@@ -56,7 +57,7 @@ public class JellyFish extends Entity{
 		this.currentY = 0;
 		this.deltaX = Math.abs(this.x - this.currentX)/travelTime;
 		this.deltaY = Math.abs(this.y - this.currentY)/travelTime;
-		this.deltaAngle = 360/travelTime;
+		
 		this.travelTime = travelTime;
 		this.projectiles = new ArrayList<Projectile>();
 		this.delay = delay;
@@ -70,6 +71,11 @@ public class JellyFish extends Entity{
 		this.gasterBlasterBlastSFX = new Source();
 		
 		this.player = player;
+		this.distance = distance;
+		
+		this.targetDirection = direction;
+		this.currentDirection = direction - 360;
+		this.deltaAngle = 360/travelTime;
 	}
 	
 	
@@ -100,6 +106,7 @@ public class JellyFish extends Entity{
 		this.gasterBlasterBlastSFX = new Source();
 		
 		this.player = null;
+		this.distance = 0;
 	}
 
 	@Override
@@ -116,6 +123,14 @@ public class JellyFish extends Entity{
 			if (this.delay < 0){
 				if (this.player != null){
 					super.setX(this.player.getX() - 48);
+					
+					float tx = this.player.getX() - (float) (distance * Math.cos(targetDirection*Math.PI/180));
+					float ty = this.player.getY() - (float) (distance * Math.sin(targetDirection*Math.PI/180));
+					
+					super.setX(tx);
+					super.setY(ty);
+					
+					
 					this.deltaX = Math.abs(this.x - this.currentX)/travelTime;
 					this.deltaY = Math.abs(this.y - this.currentY)/travelTime;
 				}
@@ -175,7 +190,6 @@ public class JellyFish extends Entity{
 			currentY -= this.deltaY;
 		}
 		
-		
 		for (Projectile p : projectiles){
 			p.update();
 			p.render();
@@ -185,7 +199,7 @@ public class JellyFish extends Entity{
 	public void shoot(){
 		this.texture = Shapes.LoadTexture("res/JellyFish_shoot.png", "PNG");
 		float radian_angle = (float) ((this.currentDirection) * Math.PI / 180);
-		int projectileSize = 64;
+		int projectileSize = (int) (this.size/2);
 		int projectileRadius = projectileSize/2;
 		for (int i = 1; i < 7; i++){
 			shootProjectile(super.getX() + projectileRadius, super.getY() + projectileRadius, i, radian_angle, projectileSize);
