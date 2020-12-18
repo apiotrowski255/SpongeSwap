@@ -47,8 +47,8 @@ public class Menu extends Entity {
 	private SpongeBob spongeBob;
 
 	// Audio
-	int Attackbuffer, genericMenuSelectBuffer, menuSelectBuffer, healSFXBuffer;
-	public Source source;
+	int attackbuffer, genericMenuSelectBuffer, menuSelectBuffer, healSFXBuffer;
+	public Source attackSource, genericMenuSource, menuSelectSource, healSFXSource;
 
 	public Menu(Player player, SpongeBob spongeBob) {
 		super(0, 0);
@@ -83,11 +83,17 @@ public class Menu extends Entity {
 		this.spongeBob = spongeBob;
 
 		// Audio
-		this.Attackbuffer = AudioMaster.loadSound("audio/Swipe.wav");
+		this.attackbuffer = AudioMaster.loadSound("audio/Swipe.wav");
+		this.attackSource = new Source();
+		
 		this.genericMenuSelectBuffer = AudioMaster.loadSound("audio/generic menu selection.wav");
+		this.genericMenuSource = new Source();
+		
 		this.menuSelectBuffer = AudioMaster.loadSound("audio/Menu select.wav");
+		this.menuSelectSource = new Source();
+		
 		this.healSFXBuffer = AudioMaster.loadSound("audio/Heal.wav");
-		this.source = new Source();
+		this.healSFXSource = new Source();
 	}
 
 	public void render() {
@@ -241,7 +247,7 @@ public class Menu extends Entity {
 				this.subMenu_options.add(new Typer(90, 525, 48, "You feel..."));
 				this.menuController.clear();
 				selected = 0;
-				source.play(genericMenuSelectBuffer);
+				genericMenuSource.play(genericMenuSelectBuffer);
 			}
 
 			if (Keyboard.isKeyDown(Keyboard.KEY_RETURN)) {
@@ -334,7 +340,10 @@ public class Menu extends Entity {
 																				// UI
 
 						this.spongeBob.dodge();
-						this.source.play(this.Attackbuffer);
+						this.attackSource.play(this.attackbuffer);
+						this.menuController.add("Enter");
+						timeSinceLastPress = 0;
+						return;
 
 					} else if (this.menuController.equals(new ArrayList<String>() {
 						{
@@ -348,7 +357,7 @@ public class Menu extends Entity {
 						} else {
 							player.setHealth(player.getHealth() + 42);
 							player.stats.modifyItems("None", selected);
-							source.play(healSFXBuffer);
+							healSFXSource.play(healSFXBuffer);
 							setPlayerTurn();
 							timeSinceLastPress = 0;
 						}
@@ -362,7 +371,7 @@ public class Menu extends Entity {
 					}
 					this.menuController.add("Enter");
 					timeSinceLastPress = 0;
-					source.play(menuSelectBuffer);
+					menuSelectSource.play(menuSelectBuffer);
 				}
 			}
 			if (selected == 0) {
@@ -427,7 +436,7 @@ public class Menu extends Entity {
 				selected = 0;
 				timeSinceLastPress = 0;
 				resetButtonSelected();
-				source.play(menuSelectBuffer);
+				menuSelectSource.play(menuSelectBuffer);
 			}
 
 		}
@@ -452,7 +461,7 @@ public class Menu extends Entity {
 				selected += size;
 			}
 			timeSinceLastPress = 0;
-			source.play(genericMenuSelectBuffer);
+			genericMenuSource.play(genericMenuSelectBuffer);
 		}
 
 	}

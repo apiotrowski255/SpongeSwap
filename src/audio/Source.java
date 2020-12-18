@@ -9,21 +9,21 @@ public class Source {
 	
 	public Source(){
 		sourceId = AL10.alGenSources();
-		AL10.alSourcef(sourceId, AL10.AL_GAIN, 1);
-		AL10.alSourcef(sourceId, AL10.AL_PITCH, 1);
-		AL10.alSource3f(sourceId, AL10.AL_POSITION, 0, 0, 0);
 	}
 	
 	public void play(int buffer){
+		stop();
 		AL10.alSourcei(sourceId, AL10.AL_BUFFER, buffer);
-		AL10.alSourcePlay(sourceId);
+		continueplaying();
 	}
 	
-	public void pause(int buffer){
-		// This does not work in pausing the music
-		// play() will start the music from the beginning
-		AL10.alSourcei(sourceId, AL10.AL_BUFFER, buffer);
+	public void pause(){
+		// Pausing music does not work. when continue to play it will start from the beginning
 		AL10.alSourcePause(sourceId);
+	}
+	
+	public void continueplaying(){
+		AL10.alSourcePlay(sourceId);
 	}
 	
 	public void mute(){
@@ -35,13 +35,37 @@ public class Source {
 		AL10.alSourcef(sourceId, AL10.AL_GAIN, 1);
 	}
 	
-	public void stop(int buffer){
-		AL10.alSourcei(sourceId, AL10.AL_BUFFER, buffer);
+	public void stop(){
 		AL10.alSourceStop(sourceId);
 	}
 	
 	public void delete(){
+		stop();
 		AL10.alDeleteSources(sourceId);
+	}
+	
+	public void setVolume(float volume){
+		AL10.alSourcef(sourceId, AL10.AL_GAIN, volume);
+	}
+	
+	public void setPitch(float pitch){
+		AL10.alSourcef(sourceId, AL10.AL_PITCH, pitch);
+	}
+	
+	public void setLooping(boolean loop){
+		AL10.alSourcei(sourceId, AL10.AL_LOOPING, loop ? AL10.AL_TRUE : AL10.AL_FALSE);
+	}
+	
+	public boolean isPlaying(){
+		return AL10.alGetSourcei(sourceId, AL10.AL_SOURCE_STATE) == AL10.AL_PLAYING;
+	}
+	
+	public void setPosition(float x, float y, float z){
+		AL10.alSource3f(sourceId, AL10.AL_POSITION, x, y, z);
+	}
+	
+	public void setVelocity(float x, float y, float z){
+		AL10.alSource3f(sourceId, AL10.AL_VELOCITY, x, y, z);
 	}
 	
 	public int getSourceID(){

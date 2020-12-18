@@ -138,7 +138,7 @@ public class MasterTurnController {
 			player.setGameOverMode();							// Player will do the death animation and will be unable to move
 			entities.add(player);
 			// stop the music
-			source.stop(buffer);
+			source.stop();
 			
 			
 			// Display GameOver
@@ -276,8 +276,8 @@ public class MasterTurnController {
 				
 				if (turnCounter == 0){
 					
-					masterProjectileController.addMulitSpiralProjectileSpawner(player.getX()-400, 706, 0f, 0f, 1f, 0, 0, 15f, 1, 32);
-					masterProjectileController.addMulitSpiralProjectileSpawner(player.getX()+400, 706, 0f, 0f, 1f, (float) Math.PI, 0, 15f, 1, 32);
+					masterProjectileController.addMulitSpiralProjectileSpawner(player.getX()-400, 706, 0f, 0f, 2f, 0, 0, 10f, 1, 32);
+					masterProjectileController.addMulitSpiralProjectileSpawner(player.getX()+400, 706, 0f, 0f, 2f, (float) Math.PI, 0, 10f, 1, 32);
 					//this.pMask.Activate();
 
 				}else if (turnCounter == 1){
@@ -320,6 +320,7 @@ public class MasterTurnController {
 					}
 					this.turnTimer = 120;
 				} else if (turnCounter == 5){
+					this.player.setColor(new Vector3f(0,0,1));
 					masterProjectileController.addMulitSpiralProjectileSpawner(200, 675, 0f, 0f, 1f, 0, 0, 15f, 1, 64);
 					this.pMask.Activate();
 				} else if (turnCounter == 6){

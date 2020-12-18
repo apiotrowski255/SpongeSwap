@@ -30,12 +30,6 @@ public class MainGameLoop {
 		//Sound setup
 		AudioMaster.init();
 		
-		//int buffer = AudioMaster.loadSound("audio/soundtrack.wav");
-		//Source source = new Source();
-		// Play music
-		//source.play(buffer);
-		
-		
 		MasterTurnController turnController = new MasterTurnController();
 		
 		int x = 1280;
@@ -57,7 +51,9 @@ public class MainGameLoop {
 
 			if (gameMenu.playerRequestToPlay()){
 				turnController.update();
-			} else {
+			} else if (gameMenu.playerRequestToClose()){
+				return;
+			}else {
 				gameMenu.update();
 				gameMenu.render();
 			}
