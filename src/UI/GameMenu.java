@@ -12,6 +12,7 @@ import audio.AudioMaster;
 import audio.Source;
 import engineTester.Clock;
 import entities.Entity;
+import entities.Typer;
 import shapes.Shapes;
 
 public class GameMenu extends Entity {
@@ -28,8 +29,10 @@ public class GameMenu extends Entity {
 	public Source source, MenuMusicSource, sndNoiseSource, creditsSource;
 	private mode mode;
 
-	private Texture texture, heartTexture, creditsTexture;
+	private Texture titleTexture, heartTexture, creditsTexture;
 
+	private Typer typer;
+	
 	enum mode {
 		MENU, PLAY, TRANSISTION, CLOSE, CREDITS
 	}
@@ -38,7 +41,7 @@ public class GameMenu extends Entity {
 		super(x, y);
 		this.selected = 0;
 		this.menu_options = new ArrayList<Button>();
-		this.menu_options.add(new Button(512, 300, "play bar"));
+		this.menu_options.add(new Button(512, 300, "play bar selected"));
 		this.menu_options.add(new Button(512, 500, "credits bar"));
 		this.menu_options.add(new Button(512, 700, "exit bar"));
 
@@ -60,7 +63,7 @@ public class GameMenu extends Entity {
 		this.MenuMusicSource.setLooping(true);
 		this.MenuMusicSource.setVolume(0.3f);
 
-		this.texture = Shapes.LoadTexture("res/spongespin title.png", "PNG");
+		this.titleTexture = Shapes.LoadTexture("res/spongespin title.png", "PNG");
 		this.heartTexture = Shapes.LoadTexture("res/heart.png", "PNG");
 
 		this.timer = 10f;
@@ -70,7 +73,9 @@ public class GameMenu extends Entity {
 		
 		this.creditsBuffer = AudioMaster.loadSound("audio/Fin.wav");
 		this.creditsSource = new Source();
-
+		this.typer = new Typer(25, 900, 18, "Press Escape to return back to main menu");
+		this.typer.setCurrentText("Press Escape to return back to main menu");
+		this.typer.setRenderStar(false);
 		
 	}
 
@@ -85,13 +90,13 @@ public class GameMenu extends Entity {
 			for (Entity button : menu_options) {
 				button.render();
 			}
-
-			GL11.glColor3f(0, 0, 1);
-			Shapes.DrawQuadTex(heartTexture, 512, 332 + selected*200, 32, 32);
-
 			GL11.glEnable(GL_TEXTURE_2D);
+			GL11.glColor3f(0, 0, 1);
+			Shapes.DrawQuadTex(heartTexture, 520, 332 + selected*200, 32, 32);
+
+			// Spongetale title page
 			GL11.glColor3f(1, 1, 1);
-			Shapes.DrawQuadTex(texture, 290, 75, 700, 150);
+			Shapes.DrawQuadTex(titleTexture, 290, 0, 700, 300);
 			
 
 		} else if (this.mode == mode.CREDITS) {
@@ -99,6 +104,7 @@ public class GameMenu extends Entity {
 			GL11.glColor3f(1, 1, 1);
 			Shapes.DrawQuadTex(creditsTexture, 0, creditsY, 1280, 3840);
 			creditsY -= 1;
+			typer.render();
 		}else {
 			GL11.glColor3f(0, 0, 0);
 			Shapes.draw_quad(0, 0, 1280, 960);
@@ -150,6 +156,7 @@ public class GameMenu extends Entity {
 					creditsSource.play(creditsBuffer);
 					creditsSource.setVolume(0.4f);
 				}
+				timer = 10f;
 			}
 		}
 	}
@@ -165,6 +172,20 @@ public class GameMenu extends Entity {
 			}
 			timeSinceLastPress = 0;
 			source.play(genericMenuSelectBuffer);
+
+			if (selected == 0){
+				menu_options.get(0).setTexture("play bar selected");
+				menu_options.get(1).setTexture("credits bar");
+				menu_options.get(2).setTexture("exit bar");
+			} else if (selected == 1){
+				menu_options.get(0).setTexture("play bar");
+				menu_options.get(1).setTexture("credits bar selected");
+				menu_options.get(2).setTexture("exit bar");
+			} else if (selected == 2){
+				menu_options.get(0).setTexture("play bar");
+				menu_options.get(1).setTexture("credits bar");
+				menu_options.get(2).setTexture("exit bar selected");
+			}
 		}
 
 	}

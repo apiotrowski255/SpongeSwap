@@ -13,12 +13,14 @@ public class Button extends Entity{
 	public int height, width;
 	public boolean selected;
 	public Texture texture;
+	private String textureString;
 	
 	public Button(float x, float y, String texture) {
 		super(x, y);
 		this.height = 96;
 		this.width = 256;
 		this.selected = false;
+		this.textureString = texture;
 		this.texture = Shapes.LoadTexture("res/"+texture+".png", "PNG");
 	}
 
@@ -34,5 +36,9 @@ public class Button extends Entity{
 	
 	public void setTexture(String texture){
 		this.texture = Shapes.LoadTexture("res/"+texture+".png", "PNG");
+	}
+	
+	public String getTexture(){
+		return this.textureString;
 	}
 }
