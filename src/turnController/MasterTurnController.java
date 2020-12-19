@@ -62,7 +62,7 @@ public class MasterTurnController {
 	private int soulHitBuffer;
 	private Source playerHitSFX;
 	private float hitTimer;
-	private final float HITDELAY = 3;
+	private final float HITDELAY = 5;
 	
 	
 	// middle state keyboard controls
@@ -324,25 +324,27 @@ public class MasterTurnController {
 					masterProjectileController.addMulitSpiralProjectileSpawner(200, 675, 0f, 0f, 1f, 0, 0, 15f, 1, 64);
 					this.pMask.Activate();
 				} else if (turnCounter == 6){
-					masterProjectileController.addMulitSpiralProjectileSpawner(200, 706, 0f, 0f, 1f, 0, 0, 15f, 1, 32);
-					masterProjectileController.addMulitSpiralProjectileSpawner(1000, 550, 0f, 0f, 1f, (float) Math.PI, 0, 15f, 1, 32);
+					// This one has gravity reverse
+					masterProjectileController.addMulitSpiralProjectileSpawner(player.getX()-400, 706, 0f, 0f, 1f, 0, 0, 15f, 1, 32);
+					masterProjectileController.addMulitSpiralProjectileSpawner(player.getX()+400, 550, 0f, 0f, 1f, (float) Math.PI, 0, 15f, 1, 32);
 					this.pMask.Activate();
 				} else if (turnCounter == 7) {
 					this.player.setColor(new Vector3f(0,0,1));
-					masterProjectileController.addMulitSpiralProjectileSpawner(200, 675, 0f, 0f, 1f, 0, 0, 15f, 1, 64);
-					masterProjectileController.addMulitSpiralProjectileSpawner(1000, 675, 0f, 0f, 1f, (float) Math.PI, 0, 15f, 1, 64);
+					masterProjectileController.addMulitSpiralProjectileSpawner(player.getX()-400, 675, 0f, 0f, 1f, 0, 0, 15f, 1, 64);
+					masterProjectileController.addMulitSpiralProjectileSpawner(player.getX()+400, 675, 0f, 0f, 1f, (float) Math.PI, 0, 15f, 1, 64);
 					this.pMask.Activate();
 				} else if (turnCounter == 8){
+					// This one has gravity reverse
 					this.player.setColor(new Vector3f(0,0,1));
-					masterProjectileController.addMulitSpiralProjectileSpawner(200, 675, 0f, 0f, 1f, 0, 0, 15f, 1, 64);
-					masterProjectileController.addMulitSpiralProjectileSpawner(1000, 550, 0f, 0f, 1f, (float) Math.PI, 0, 15f, 1, 64);
+					masterProjectileController.addMulitSpiralProjectileSpawner(player.getX()-400, 675, 0f, 0f, 1f, 0, 0, 15f, 1, 64);
+					masterProjectileController.addMulitSpiralProjectileSpawner(player.getX()+400, 550, 0f, 0f, 1f, (float) Math.PI, 0, 15f, 1, 64);
 					this.pMask.Activate();
 				} else if (turnCounter == 9){
 					this.player.setColor(new Vector3f(0,0,1));
-					masterProjectileController.addMulitSpiralProjectileSpawner(200, 675, 0f, 0f, 1f, 0, 0, 15f, 1, 64);
-					masterProjectileController.addMulitSpiralProjectileSpawner(1000, 675, 0f, 0f, 1f, (float) Math.PI, 0, 15f, 1, 64);
-					masterProjectileController.addMulitSpiralProjectileSpawner(1000, 550, 0f, 0f, 1f, (float) Math.PI, 0, 15f, 1, 64);
-					masterProjectileController.addMulitSpiralProjectileSpawner(200, 550, 0f, 0f, 1f, 0, 0, 15f, 1, 64);
+					masterProjectileController.addMulitSpiralProjectileSpawner(player.getX()-400, 675, 0f, 0f, 1f, 0, 0, 15f, 1, 64);
+					masterProjectileController.addMulitSpiralProjectileSpawner(player.getX()+400, 675, 0f, 0f, 1f, (float) Math.PI, 0, 15f, 1, 64);
+					masterProjectileController.addMulitSpiralProjectileSpawner(player.getX()+400, 550, 0f, 0f, 1f, (float) Math.PI, 0, 15f, 1, 64);
+					masterProjectileController.addMulitSpiralProjectileSpawner(player.getX()-400, 550, 0f, 0f, 1f, 0, 0, 15f, 1, 64);
 					this.pMask.Activate();
 				} else if (turnCounter == 10) {
 					

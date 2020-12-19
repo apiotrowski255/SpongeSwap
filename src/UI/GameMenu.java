@@ -19,17 +19,19 @@ public class GameMenu extends Entity {
 	ArrayList<Button> menu_options;
 	public int selected;
 
+	public float creditsY;
+	
 	public float delay, timeSinceLastPress, timer;
 
 	// Audio
-	int genericMenuSelectBuffer, MenuMusicBuffer, sndNoiseBuffer;
-	public Source source, MenuMusicSource, sndNoiseSource;
+	int genericMenuSelectBuffer, MenuMusicBuffer, sndNoiseBuffer, creditsBuffer;
+	public Source source, MenuMusicSource, sndNoiseSource, creditsSource;
 	private mode mode;
 
-	private Texture texture, heartTexture;
+	private Texture texture, heartTexture, creditsTexture;
 
 	enum mode {
-		MENU, PLAY, TRANSISTION, CLOSE
+		MENU, PLAY, TRANSISTION, CLOSE, CREDITS
 	}
 
 	public GameMenu(float x, float y) {
@@ -37,7 +39,8 @@ public class GameMenu extends Entity {
 		this.selected = 0;
 		this.menu_options = new ArrayList<Button>();
 		this.menu_options.add(new Button(512, 300, "play bar"));
-		this.menu_options.add(new Button(512, 500, "exit bar"));
+		this.menu_options.add(new Button(512, 500, "credits bar"));
+		this.menu_options.add(new Button(512, 700, "exit bar"));
 
 		this.timeSinceLastPress = 0;
 		this.delay = 2f;
@@ -53,44 +56,63 @@ public class GameMenu extends Entity {
 		this.sndNoiseBuffer = AudioMaster.loadSound("audio/snd_noise.wav");
 		this.sndNoiseSource = new Source();
 
-		MenuMusicSource.play(MenuMusicBuffer);
-		MenuMusicSource.setLooping(true);
-		MenuMusicSource.setVolume(0.3f);
+		this.MenuMusicSource.play(MenuMusicBuffer);
+		this.MenuMusicSource.setLooping(true);
+		this.MenuMusicSource.setVolume(0.3f);
 
 		this.texture = Shapes.LoadTexture("res/spongespin title.png", "PNG");
 		this.heartTexture = Shapes.LoadTexture("res/heart.png", "PNG");
 
 		this.timer = 10f;
+		
+		this.creditsTexture = Shapes.LoadTexture("res/credits.png", "PNG");
+		this.creditsY = 900;
+		
+		this.creditsBuffer = AudioMaster.loadSound("audio/Fin.wav");
+		this.creditsSource = new Source();
+
+		
 	}
 
 	@Override
 	public void render() {
+		
+		// black background 
+		GL11.glColor3f(0, 0, 0);
+		Shapes.draw_quad(0, 0, 1280, 960);
+		
 		if (this.mode == mode.MENU) {
 			for (Entity button : menu_options) {
 				button.render();
 			}
 
-			if (selected == 0) {
-				GL11.glColor3f(0, 0, 1);
-				Shapes.DrawQuadTex(heartTexture, 512, 300, 32, 32);
-			} else if (selected == 1) {
-				GL11.glColor3f(0, 0, 1);
-				Shapes.DrawQuadTex(heartTexture, 512, 500, 32, 32);
-			}
+			GL11.glColor3f(0, 0, 1);
+			Shapes.DrawQuadTex(heartTexture, 512, 332 + selected*200, 32, 32);
 
 			GL11.glEnable(GL_TEXTURE_2D);
 			GL11.glColor3f(1, 1, 1);
-			Shapes.DrawQuadTex(texture, 100, 100, 500, 100);
-		} else {
+			Shapes.DrawQuadTex(texture, 290, 75, 700, 150);
+			
+
+		} else if (this.mode == mode.CREDITS) {
+			GL11.glEnable(GL_TEXTURE_2D);
+			GL11.glColor3f(1, 1, 1);
+			Shapes.DrawQuadTex(creditsTexture, 0, creditsY, 1280, 3840);
+			creditsY -= 1;
+		}else {
 			GL11.glColor3f(0, 0, 0);
-			Shapes.draw_quad(0, 0, 960, 1280);
+			Shapes.draw_quad(0, 0, 1280, 960);
 		}
 	}
 
-	@Override
 	public void update() {
-		// TODO Auto-generated method stub
-		if (this.mode != mode.TRANSISTION) {
+		if (this.mode == mode.CREDITS) {
+			if (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+				this.mode = mode.MENU;
+				creditsSource.stop();
+				creditsY = 900;
+			}
+		} else if (this.mode != mode.TRANSISTION) {
 			if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
 				changeSelect(-1, menu_options.size());
 			}
@@ -104,7 +126,11 @@ public class GameMenu extends Entity {
 					this.mode = mode.TRANSISTION;
 					MenuMusicSource.stop();
 					sndNoiseSource.play(sndNoiseBuffer);
-				} else if (selected == 1) {
+				} else if (selected == 1){
+					MenuMusicSource.stop();
+					this.mode = mode.TRANSISTION;
+					sndNoiseSource.play(sndNoiseBuffer);
+				} else if (selected == 2) {
 					MenuMusicSource.delete();
 					this.mode = mode.CLOSE;
 				}
@@ -116,8 +142,14 @@ public class GameMenu extends Entity {
 			if (timer > 0){
 				timer -= Clock.Delta();
 			} else {
-				sndNoiseSource.play(sndNoiseBuffer);
-				this.mode = mode.PLAY;
+				if (selected == 0){
+					this.mode = mode.PLAY;
+					sndNoiseSource.play(sndNoiseBuffer);
+				} else if (selected == 1){
+					this.mode = mode.CREDITS;
+					creditsSource.play(creditsBuffer);
+					creditsSource.setVolume(0.4f);
+				}
 			}
 		}
 	}

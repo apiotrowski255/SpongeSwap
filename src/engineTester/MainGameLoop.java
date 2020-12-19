@@ -53,7 +53,7 @@ public class MainGameLoop {
 				turnController.update();
 			} else if (gameMenu.playerRequestToClose()){
 				return;
-			}else {
+			} else {
 				gameMenu.update();
 				gameMenu.render();
 			}
