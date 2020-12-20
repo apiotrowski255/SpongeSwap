@@ -1,6 +1,11 @@
 package turnController;
 
 
+import static org.lwjgl.opengl.GL11.GL_QUADS;
+import static org.lwjgl.opengl.GL11.glBegin;
+import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.glVertex2d;
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -8,6 +13,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
+import UI.GameOverMenu;
 import UI.Menu;
 import UI.Text;
 import audio.AudioMaster;
@@ -70,6 +76,8 @@ public class MasterTurnController {
 	private final float DELAY = 1f;
 	private MultiTyper testMultiTyper;
 	
+	private GameOverMenu gameOverMenu;
+	private float gameOverTimer, tempAlpha;
 	
 	public MasterTurnController(){
 		this.turn = PLAYERTURN;
@@ -111,6 +119,11 @@ public class MasterTurnController {
 		
 		
 		this.testMultiTyper = new MultiTyper(800, 150, 24, new ArrayList<String>());
+		
+		
+		this.gameOverMenu = new GameOverMenu(0, 0);
+		this.gameOverTimer = 60f;
+		this.tempAlpha = 1f;
 	}
 	
 	public void update(){
@@ -141,17 +154,31 @@ public class MasterTurnController {
 			source.stop();
 			
 			
-			// Display GameOver
+
 			
-			ArrayList<String> test = new ArrayList<String>();
-			test.add("GameOver");
-			this.testMultiTyper.setCurrentText(test);
-			this.testMultiTyper.show();
-			this.testMultiTyper.setFontSize(48);
-			this.testMultiTyper.setX(1280/2 - testMultiTyper.getFont().getWidth("GameOver")/2);
-			this.testMultiTyper.setY(150);
+
 			
-			
+			if (gameOverTimer < 0){
+				gameOverMenu.update();
+				gameOverMenu.render();
+				if (tempAlpha > 0){
+					GL11.glColor4f(0, 0, 0, tempAlpha);
+					int x = 0;
+					int y = 0;
+					int width = 1280;
+					int height = 960;
+					glBegin(GL_QUADS);
+					glVertex2d(x, y);
+					glVertex2d(x + width, y);
+					glVertex2d(x + width, y + height);
+					glVertex2d(x, y + height);
+					glEnd();
+					tempAlpha -= 0.002f;
+				}
+				
+			} else {
+				gameOverTimer -= Clock.Delta();
+			}
 			
 			
 			
@@ -172,6 +199,7 @@ public class MasterTurnController {
 				this.testMultiTyper.setY(150);
 				this.testMultiTyper.clearText();
 				this.testMultiTyper.hide();
+				gameOverTimer = 60f;
 			}
 			
 			return;
