@@ -50,6 +50,9 @@ public class Menu extends Entity {
 	int attackbuffer, genericMenuSelectBuffer, menuSelectBuffer, healSFXBuffer;
 	public Source attackSource, genericMenuSource, menuSelectSource, healSFXSource;
 
+	// flag for Spongebob to die (essentially ending the game)
+	private boolean spongeBobDeathFlag;
+
 	public Menu(Player player, SpongeBob spongeBob) {
 		super(0, 0);
 		this.selected = 0;
@@ -94,6 +97,9 @@ public class Menu extends Entity {
 		
 		this.healSFXBuffer = AudioMaster.loadSound("audio/Heal.wav");
 		this.healSFXSource = new Source();
+		
+		
+		this.spongeBobDeathFlag = false;
 	}
 
 	public void render() {
@@ -334,12 +340,12 @@ public class Menu extends Entity {
 						float xPos = (DisplayManager.getWidth() - size) / 2;
 						menuComponent.add(new FightAnimation(xPos, yPos, size, size, 2, frames));
 
-						menuComponent.add(new Miss(510, 80, 32 * 7, 9 * 7)); // Spawn
-																				// the
-																				// Miss
-																				// UI
-
-						this.spongeBob.dodge();
+						if (spongeBobDeathFlag == false){
+							menuComponent.add(new Miss(510, 80, 32 * 7, 9 * 7)); 	// Spawn the Miss UI
+							this.spongeBob.dodge();
+						} else {
+							this.spongeBob.die();
+						}
 						this.attackSource.play(this.attackbuffer);
 						this.menuController.add("Enter");
 						timeSinceLastPress = 0;
@@ -516,4 +522,11 @@ public class Menu extends Entity {
 		// Previously it was: player.setX(selected * 325 + 53);
 	}
 
+	public boolean isSpongeBobDeathFlag() {
+		return spongeBobDeathFlag;
+	}
+
+	public void setSpongeBobDeathFlag(boolean spongeBobDeathFlag) {
+		this.spongeBobDeathFlag = spongeBobDeathFlag;
+	}
 }

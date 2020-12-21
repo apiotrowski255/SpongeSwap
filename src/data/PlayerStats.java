@@ -45,4 +45,10 @@ public class PlayerStats {
 		items.remove(index);
 		items.add(index, string);
 	}
+	
+	public void reset(){
+		for (int i = 0; i < 4; i++){
+			items.set(i, "crabby patty");
+		}
+	}
 }

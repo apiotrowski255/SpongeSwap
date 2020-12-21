@@ -18,7 +18,7 @@ public class DisplayManager {
 	public static void createDisplay(){
 		
 		try {
-			Display.setTitle("TITLE HERE");
+			Display.setTitle("SpongeTale");
 			Display.setDisplayMode(new DisplayMode(WIDTH, HEIGHT));
 			Display.create();
 		} catch (LWJGLException e) {

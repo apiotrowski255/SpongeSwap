@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.opengl.Texture;
 
+import audio.AudioMaster;
+import audio.Source;
 import engineTester.Clock;
 import shapes.Shapes;
 
@@ -14,6 +16,7 @@ public class SpongeBob extends Entity {
 
 	public Texture faceTexture;
 	public Texture bodyTexture;
+	public Texture bodyHitTexture, legsFallTexture;
 	
 	public float faceX, faceY, faceYIdleDisplacementCounter;
 	public int faceW, faceH;
@@ -37,9 +40,13 @@ public class SpongeBob extends Entity {
 	private int currentFrameCounter;
 	private float animationTimer;
 	private float frame_speed;
-	private boolean animateDown, animateUp, animateLeft, animateRight;
+	private boolean animateDown, animateUp, animateLeft, animateRight, dead;
 	
 	private float targetX, targetY;
+	
+	// Hit sound effect
+	private int hitSFXbuffer;
+	private Source hitSFXsource;
 	
 	public SpongeBob(float x, float y) {
 		super(x, y);
@@ -64,6 +71,8 @@ public class SpongeBob extends Entity {
 		this.faceTexture = Shapes.LoadTexture("res/SpongeBob/face_netural.png", "PNG");
 		this.bodyTexture = Shapes.LoadTexture("res/SpongeBob/torso_remake.png", "PNG");
 		
+		this.bodyHitTexture = Shapes.LoadTexture("res/SpongeBob/body_hit.png", "PNG");
+		
 		this.xSpeed = 4;
 		this.counter = 0;
 		
@@ -80,6 +89,10 @@ public class SpongeBob extends Entity {
 		loadAnimationUpTextures();
 		loadAnimationLeftTextures();
 		loadAnimationRightTextures();
+		
+		this.hitSFXbuffer = AudioMaster.loadSound("audio/Hit.wav");
+		this.hitSFXsource = new Source();
+		this.dead = false;
 	}
 
 	public void render() {
@@ -314,4 +327,14 @@ public class SpongeBob extends Entity {
 		this.bodyTexture = Shapes.LoadTexture("res/SpongeBob/" + texture + ".png", "PNG");
 	}
 
+	public void die() {
+		System.out.println("SpongeBob should be dead now, play animation and move him off screen");
+		this.bodyTexture = Shapes.LoadTexture("res/SpongeBob/body_hit1.png", "PNG");
+		this.hitSFXsource.play(hitSFXbuffer);
+		this.dead = true;
+	}
+
+	public boolean isDead(){
+		return this.dead;
+	}
 }

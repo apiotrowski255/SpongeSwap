@@ -1,11 +1,14 @@
 package engineTester;
 
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+
 import java.util.ArrayList;
 
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
 import UI.GameMenu;
+import UI.GameOverMenu.mode;
 import audio.AudioMaster;
 import audio.Source;
 import entities.Background;
@@ -35,11 +38,13 @@ public class MainGameLoop {
 		int x = 1280;
 		int y = 960; 
 		
-		GameMenu gameMenu = new GameMenu(0,0); 
+		GameMenu gameMenu = new GameMenu(0,0, turnController); 
 		
 		while (!Display.isCloseRequested()) {
 			
 			GL11.glClearColor(0,0,0,1);				// It actually makes the images a bit sharper
+			
+
 			
 			DisplayManager.updateDisplay();
 			
@@ -50,7 +55,14 @@ public class MainGameLoop {
 			Clock.update();
 
 			if (gameMenu.playerRequestToPlay()){
-				turnController.update();
+				if (turnController.gameOverMenu.getMode() == mode.EXITPROGRAM){
+					gameMenu.close();
+				} else if (turnController.gameOverMenu.getMode() == mode.RETURNTOMAINMENU){
+					gameMenu.tempFreeze();
+					gameMenu.mainMenu();
+				} else if (turnController.gameOverMenu.getMode() == mode.MENU){
+					turnController.update();
+				}
 			} else if (gameMenu.playerRequestToClose()){
 				return;
 			} else {
@@ -61,7 +73,6 @@ public class MainGameLoop {
 		}
 
 		//Sound cleanup
-		//source.delete();
 		AudioMaster.cleanUp();
 		
 		DisplayManager.closeDisplay();

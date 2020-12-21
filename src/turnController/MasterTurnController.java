@@ -16,6 +16,7 @@ import org.lwjgl.util.vector.Vector3f;
 import UI.GameOverMenu;
 import UI.Menu;
 import UI.Text;
+import UI.GameOverMenu.mode;
 import audio.AudioMaster;
 import audio.Source;
 import controllers.MasterProjectileController;
@@ -38,6 +39,7 @@ public class MasterTurnController {
 	private static final int PLAYERTURN = 0;
 	private static final int MIDDLE = 1;
 	private static final int ENEMYTURN = 2;
+	private static final int FINALWORDS = 3;
 	
 	public int playerAction;
 
@@ -76,8 +78,11 @@ public class MasterTurnController {
 	private final float DELAY = 1f;
 	private MultiTyper testMultiTyper;
 	
-	private GameOverMenu gameOverMenu;
-	private float gameOverTimer, tempAlpha;
+	public GameOverMenu gameOverMenu;
+	private float gameOverTimer;
+	
+	private float finalTimer;
+	private boolean finalFlag;
 	
 	public MasterTurnController(){
 		this.turn = PLAYERTURN;
@@ -122,8 +127,10 @@ public class MasterTurnController {
 		
 		
 		this.gameOverMenu = new GameOverMenu(0, 0);
-		this.gameOverTimer = 60f;
-		this.tempAlpha = 1f;
+		this.gameOverTimer = 50f;
+		
+		this.finalTimer = 0;
+		this.finalFlag = false;
 	}
 	
 	public void update(){
@@ -140,9 +147,13 @@ public class MasterTurnController {
 			entity.render();
 		}
 		
+		if (Keyboard.isKeyDown((Keyboard.KEY_F))){
+			SB.die();
+		}
+		
+		
 		if (player.getHealth() <= 0){
 			// Go to Game Over screen
-			//System.out.println("Game Over");
 			
 			//Clear everything
 			clearScreen();
@@ -154,35 +165,14 @@ public class MasterTurnController {
 			source.stop();
 			
 			
-
-			
-
-			
 			if (gameOverTimer < 0){
 				gameOverMenu.update();
-				gameOverMenu.render();
-				if (tempAlpha > 0){
-					GL11.glColor4f(0, 0, 0, tempAlpha);
-					int x = 0;
-					int y = 0;
-					int width = 1280;
-					int height = 960;
-					glBegin(GL_QUADS);
-					glVertex2d(x, y);
-					glVertex2d(x + width, y);
-					glVertex2d(x + width, y + height);
-					glVertex2d(x, y + height);
-					glEnd();
-					tempAlpha -= 0.002f;
-				}
-				
+				gameOverMenu.render();				
 			} else {
 				gameOverTimer -= Clock.Delta();
 			}
 			
-			
-			
-			if (Keyboard.isKeyDown(Keyboard.KEY_RETURN)){
+			if (gameOverMenu.getMode() == mode.RETRY){
 				entities.clear();
 				initStartEntities();
 				
@@ -200,6 +190,13 @@ public class MasterTurnController {
 				this.testMultiTyper.clearText();
 				this.testMultiTyper.hide();
 				gameOverTimer = 60f;
+				gameOverMenu.reset();
+				this.turnCounter = 0;
+				reset();
+			} else if (gameOverMenu.getMode() == mode.RETURNTOMAINMENU){
+				
+			} else if (gameOverMenu.getMode() == mode.EXITPROGRAM){
+				// nothing needs to happen here.
 			}
 			
 			return;
@@ -207,6 +204,10 @@ public class MasterTurnController {
 		
 		if (turn == PLAYERTURN){
 			// Switch to the Middle Turn
+			if (turnCounter >= 15){
+				menu.setSpongeBobDeathFlag(true);
+			}
+			
 			if (menu.playerTurnCompleted()){
 				this.turn = MIDDLE;
 				this.player.disablePlayerMovement();
@@ -250,27 +251,8 @@ public class MasterTurnController {
 			
 		} else if (turn == ENEMYTURN){
 			// Here the player will be dodging the projectiles spawned
-			
-			turnTimer -= Clock.Delta();
-			
-			// change player gravity direction while in the middle of dodging projectiles
-			if (turnCounter == 8 || turnCounter == 6){
-				if (turnTimer < 75 && this.player.getGravityDirection() != this.player.UP){
-					this.player.setGravityDirection(this.player.UP);
-					this.player.gravity = 5;
-					this.player.playSlamSFXOnNextChange();
-					this.SB.playAnimationUp();
-				}
-			}
-			
-			// Switch back to the player turn
-			if (Keyboard.isKeyDown(Keyboard.KEY_C) || turnTimer <= 0){
-				gameSetPlayerTurn();
-			} else {
-				masterProjectileController.update();
-				detectCollision(player, masterProjectileController);
-				hitTimer -= Clock.Delta();
-			}
+			enemyTurnHandler();
+
 			
 		} else if (turn == MIDDLE){
 			// Here Insert the dialogue that spongebob will have
@@ -303,7 +285,7 @@ public class MasterTurnController {
 				this.player.setPlayMode();
 				
 				if (turnCounter == 0){
-					
+					this.player.setColor(new Vector3f(0,0,1));
 					masterProjectileController.addMulitSpiralProjectileSpawner(player.getX()-400, 706, 0f, 0f, 2f, 0, 0, 10f, 1, 32);
 					masterProjectileController.addMulitSpiralProjectileSpawner(player.getX()+400, 706, 0f, 0f, 2f, (float) Math.PI, 0, 10f, 1, 32);
 					//this.pMask.Activate();
@@ -404,6 +386,23 @@ public class MasterTurnController {
 				this.testMultiTyper.clearText();
 			} 
 			
+		} else if (turn == FINALWORDS){
+			if (finalTimer == 0){
+				this.testMultiTyper.clearCurrentText();
+				this.testMultiTyper.addText("Welp, this is it.");
+				this.testMultiTyper.show();
+			} else if (finalTimer > 50 && finalFlag == false){
+				this.testMultiTyper.clearText();
+				this.testMultiTyper.addText("Just don't say i didn't warn ya");
+				this.testMultiTyper.show();
+				finalFlag = true;
+			} else if (finalTimer > 80 && finalFlag == true){
+				this.testMultiTyper.clearText();
+				this.player.setHealth(0);
+				finalFlag = false;
+			}
+			
+			this.finalTimer += Clock.Delta();
 		}
 
 		
@@ -414,9 +413,14 @@ public class MasterTurnController {
 		
 		// Jelly Fish need to be above the mask
 		masterProjectileController.updateJellyFish();
-		
-		//clean_up_entities(entities);
 
+		
+		if (SB.isDead()){
+			source.stop();
+			this.turn = FINALWORDS;
+			return;
+		}
+		
 		
 		// audio handler to replay/loop the music
 		if (audioTimer < 0){
@@ -425,6 +429,8 @@ public class MasterTurnController {
 		} else {
 			audioTimer -= Clock.Delta();
 		}
+		
+		
 	}
 	
 	public void clearScreen(){
@@ -445,7 +451,6 @@ public class MasterTurnController {
 		this.menu.subMenu_options.get(0).setText("You feel the Ocean weighting you down");
 		menu.status = false;
 		menu.mode = 0;
-		//clearProjectiles(entities);
 		clearProjectileSpawners();
 		System.out.println("It is now the player turn!");
 	}
@@ -520,6 +525,52 @@ public class MasterTurnController {
 		float dy = player.getY() + player.size/2 - (projectile.getY()+projectile.size/2);
 		return (float) Math.sqrt(dx*dx + dy*dy);
 	}
+
+	public void reset() {
+		entities.clear();
+		initStartEntities();
+		
+		// relive the player
+		player.reset();
+		player.setHealth(92);
+		this.turn = PLAYERTURN;
+		
+		// resume playing the music
+		source.play(buffer);
+		this.audioTimer = SOUNDTRACKLENGTH;
+		
+		this.testMultiTyper.setX(800);
+		this.testMultiTyper.setY(150);
+		this.testMultiTyper.clearText();
+		this.testMultiTyper.hide();
+		gameOverTimer = 60f;
+		gameOverMenu.reset();
+		this.turnCounter = 0;
+		this.player.stats.reset();
+		this.turn = PLAYERTURN;
+	}
 	
+	public void enemyTurnHandler(){
+		turnTimer -= Clock.Delta();
+		
+		// change player gravity direction while in the middle of dodging projectiles
+		if (turnCounter == 8 || turnCounter == 6){
+			if (turnTimer < 75 && this.player.getGravityDirection() != this.player.UP){
+				this.player.setGravityDirection(this.player.UP);
+				this.player.gravity = 5;
+				this.player.playSlamSFXOnNextChange();
+				this.SB.playAnimationUp();
+			}
+		}
+		
+		// Switch back to the player turn
+		if (Keyboard.isKeyDown(Keyboard.KEY_C) || turnTimer <= 0){
+			gameSetPlayerTurn();
+		} else {
+			masterProjectileController.update();
+			detectCollision(player, masterProjectileController);
+			hitTimer -= Clock.Delta();
+		}
+	}
 	
 }

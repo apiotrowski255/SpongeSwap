@@ -41,4 +41,10 @@ public class Button extends Entity{
 	public String getTexture(){
 		return this.textureString;
 	}
+	
+	public void renderAlpha(float alpha){
+		GL11.glEnable(GL_TEXTURE_2D);
+		GL11.glColor4f(1, 1, 1, alpha);
+		Shapes.DrawQuadTex(texture, super.getX(), super.getY(), width, height);
+	}
 }
