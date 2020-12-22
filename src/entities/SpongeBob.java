@@ -125,7 +125,7 @@ public class SpongeBob extends Entity {
 		}	
 	}
 	
-	
+	// This animateRight function might be broken
 	public void animateRight(){
 		if (animationTimer > this.frame_speed){
 			
@@ -134,7 +134,7 @@ public class SpongeBob extends Entity {
 				animateLeft = false;
 				currentFrameCounter = 0;
 				bodyTexture = Shapes.LoadTexture("res/SpongeBob/torso_remake.png", "PNG");
-				System.out.println("Animation Finished");
+				System.out.println("Right Animation Finished");
 				return;
 			} else if (currentFrameCounter < animationRight.size()){
 				bodyTexture = animationRight.get(currentFrameCounter);
@@ -154,7 +154,7 @@ public class SpongeBob extends Entity {
 				animateLeft = false;
 				currentFrameCounter = 0;
 				bodyTexture = Shapes.LoadTexture("res/SpongeBob/torso_remake.png", "PNG");
-				System.out.println("Animation Finished");
+				System.out.println("Left Animation Finished");
 				return;
 			} else if (currentFrameCounter < animationLeft.size()){
 				bodyTexture = animationLeft.get(currentFrameCounter);
@@ -174,7 +174,7 @@ public class SpongeBob extends Entity {
 				animateUp = false;
 				currentFrameCounter = 0;
 				bodyTexture = Shapes.LoadTexture("res/SpongeBob/torso_remake.png", "PNG");
-				System.out.println("Animation Finished");
+				System.out.println("UP Animation Finished");
 				return;
 			} else if (currentFrameCounter < animationUp.size()){
 				bodyTexture = animationUp.get(currentFrameCounter);
@@ -194,7 +194,7 @@ public class SpongeBob extends Entity {
 				animateDown = false;
 				currentFrameCounter = 0;
 				bodyTexture = Shapes.LoadTexture("res/SpongeBob/torso_remake.png", "PNG");
-				System.out.println("Animation Finished");
+				System.out.println("Down Animation Finished");
 				return;
 			} else if (currentFrameCounter < animationDown.size()){
 				bodyTexture = animationDown.get(currentFrameCounter);

@@ -21,7 +21,7 @@ import shapes.Shapes;
 
 public class GameOverMenu extends Entity {
 
-	public int selected;
+	public int selected, heartWidth;
 
 	private Texture brokenHeartTexture, gameOverTitleTexture;
 
@@ -64,7 +64,8 @@ public class GameOverMenu extends Entity {
 		this.genericMenuSource = new Source();
 
 		this.brokenHeartTexture = Shapes.LoadTexture("res/heart_broken.png", "PNG");
-
+		this.heartWidth = 40;
+		
 		this.alpha = 0f;
 	}
 
@@ -82,7 +83,7 @@ public class GameOverMenu extends Entity {
 
 			GL11.glEnable(GL_TEXTURE_2D);
 			GL11.glColor4f(0, 0, 1, alpha);
-			Shapes.DrawQuadTex(brokenHeartTexture, 525, 332 + selected * 200, 40, 32);
+			Shapes.DrawQuadTex(brokenHeartTexture, 525, 332 + selected * 200, heartWidth, 32);
 		}
 	}
 

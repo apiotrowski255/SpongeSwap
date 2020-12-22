@@ -54,7 +54,7 @@ public class JellyFish extends Entity{
 		this.state = WAIT;
 		this.timeSinceLastShot = 0;
 		this.currentX = (float) (Math.random() * 1280);
-		this.currentY = (float) (Math.random() * -700 + -200);
+		this.currentY = (float) (Math.random() * -700 - 200);
 		this.deltaX = Math.abs(this.x - this.currentX)/travelTime;
 		this.deltaY = Math.abs(this.y - this.currentY)/travelTime;
 		
@@ -89,7 +89,7 @@ public class JellyFish extends Entity{
 		this.state = WAIT;
 		this.timeSinceLastShot = 0;
 		this.currentX = (float) (Math.random() * 1280);
-		this.currentY = (float) (Math.random() * -700);
+		this.currentY = (float) (Math.random() * -700 - 200);
 		this.deltaX = Math.abs(this.x - this.currentX)/travelTime;
 		this.deltaY = Math.abs(this.y - this.currentY)/travelTime;
 		this.deltaAngle = 360/travelTime;

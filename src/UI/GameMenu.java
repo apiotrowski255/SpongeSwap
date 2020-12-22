@@ -2,10 +2,13 @@ package UI;
 
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 
+import java.awt.Font;
 import java.util.ArrayList;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
+import org.newdawn.slick.Color;
+import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.opengl.Texture;
 
 import audio.AudioMaster;
@@ -30,7 +33,7 @@ public class GameMenu extends Entity {
 	public Source source, MenuMusicSource, sndNoiseSource, creditsSource;
 	public mode mode;
 
-	private Texture titleTexture, heartTexture, creditsTexture;
+	private Texture titleTexture, heartTexture, creditsTexture, tutorialTexture, versionTexture;
 
 	private Typer typer;
 
@@ -39,6 +42,8 @@ public class GameMenu extends Entity {
 	}
 
 	public MasterTurnController turnController;
+	private TrueTypeFont font;
+	private int fontsize;
 	
 	public GameMenu(float x, float y, MasterTurnController turnController) {
 		super(x, y);
@@ -81,6 +86,16 @@ public class GameMenu extends Entity {
 		this.typer.setRenderStar(false);
 
 		this.turnController = turnController;
+		
+		
+		this.tutorialTexture = Shapes.LoadTexture("res/movement tutorial.png", "PNG");
+		
+		this.versionTexture = Shapes.LoadTexture("res/version.png", "PNG");
+		
+		Font awtFont = new Font(Font.SERIF, Font.PLAIN, 12); //name, style (PLAIN, BOLD, or ITALIC), size
+		this.font = new TrueTypeFont(awtFont, false); //base Font, anti-aliasing true/false
+		
+		this.fontsize = 12;
 	}
 
 	@Override
@@ -101,7 +116,13 @@ public class GameMenu extends Entity {
 			// Spongetale title page
 			GL11.glColor3f(1, 1, 1);
 			Shapes.DrawQuadTex(titleTexture, 290, 0, 700, 300);
+			
+			// Quick tutorial on how to move
+			GL11.glColor3f(1, 1, 1);
+			Shapes.DrawQuadTex(tutorialTexture, 900, 400, 200, 200);
 
+			Shapes.DrawQuadTex(versionTexture, 0, 900, 300, 75);
+			
 		} else if (this.mode == mode.CREDITS) {
 			GL11.glEnable(GL_TEXTURE_2D);
 			GL11.glColor3f(1, 1, 1);

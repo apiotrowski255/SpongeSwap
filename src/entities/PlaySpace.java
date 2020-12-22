@@ -60,10 +60,14 @@ public class PlaySpace extends Entity{
 		
 		setPlayerBounds();
 		
+		// This proves that the play space can change in size while the player is dodging (enemy turn)
+		// removing from the final build
+		/*
 		if (Keyboard.isKeyDown(Keyboard.KEY_B)) {
 			invokeTransition(DisplayManager.getWidth()/2 - 200/2, 550, 200, 200, 10);
 			System.out.println("Pressed");
 		}
+		*/
 
 	}
 	

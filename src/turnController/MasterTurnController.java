@@ -69,8 +69,8 @@ public class MasterTurnController {
 	// 
 	private int soulHitBuffer;
 	private Source playerHitSFX;
-	private float hitTimer;
-	private final float HITDELAY = 5;
+	private float hitSoundTimer, hitTimer;
+	private final float HITDELAY = 0.4f;
 	
 	
 	// middle state keyboard controls
@@ -119,12 +119,10 @@ public class MasterTurnController {
 		
 		this.soulHitBuffer = AudioMaster.loadSound("audio/Soul Hit quiet.wav");
 		this.playerHitSFX = new Source();
+		this.hitSoundTimer = 2;
 		this.hitTimer = HITDELAY;
 		
-		
-		
 		this.testMultiTyper = new MultiTyper(800, 150, 24, new ArrayList<String>());
-		
 		
 		this.gameOverMenu = new GameOverMenu(0, 0);
 		this.gameOverTimer = 50f;
@@ -145,10 +143,6 @@ public class MasterTurnController {
 		for (Entity entity:entities){
 			entity.update();
 			entity.render();
-		}
-		
-		if (Keyboard.isKeyDown((Keyboard.KEY_F))){
-			SB.die();
 		}
 		
 		
@@ -204,7 +198,7 @@ public class MasterTurnController {
 		
 		if (turn == PLAYERTURN){
 			// Switch to the Middle Turn
-			if (turnCounter >= 15){
+			if (turnCounter >= 17){
 				menu.setSpongeBobDeathFlag(true);
 			}
 			
@@ -220,31 +214,66 @@ public class MasterTurnController {
 				this.turnTimer = 50;		// default of 5 second for enemy turn (5 seconds of enemy talking)
 				this.testMultiTyper.clearCurrentText();
 				if (turnCounter == 0){
-					this.testMultiTyper.addText("What?");
-					this.testMultiTyper.addText("Expect me to go all out?");
-					
+					this.testMultiTyper.addText("I may be a sponge");
+					this.testMultiTyper.addText("but i can't absorb");
+					this.testMultiTyper.addText("that.");
 				} else if (turnCounter == 1){
-					this.testMultiTyper.addText("Trust me");
-					this.testMultiTyper.addText("Even i don't want this fight");
+					this.testMultiTyper.addText("Our reports show");
+					this.testMultiTyper.addText("a distortion in the");
+					this.testMultiTyper.addText("space time continuum");
 					playSpace.invokeTransition(DisplayManager.getWidth()/2 - 600/2, 300, 400, 600, 50);
 				} else if (turnCounter == 2) {
-					this.testMultiTyper.addText("You did strike first");
+					this.testMultiTyper.addText("But I won't bore you");
+					this.testMultiTyper.addText("with the details");
 				} else if (turnCounter == 3){
-					this.testMultiTyper.addText("I forgive you...");
+					this.testMultiTyper.addText("Since we both know");
+					this.testMultiTyper.addText("You're the one behind");
+					this.testMultiTyper.addText("it");
 				} else if (turnCounter == 4){
-					this.testMultiTyper.addText("I forgive you...");
-					this.testMultiTyper.addText("Even if you don't");
-					playSpace.invokeTransition(DisplayManager.getWidth()/2 - 600/2, 300, 400, 600, 50);
+					this.testMultiTyper.addText("I remember a time");
+					this.testMultiTyper.addText("when i called");
+					this.testMultiTyper.addText("you friend...");
+					playSpace.invokeTransition(DisplayManager.getWidth()/2 - 300/2, 400, 300, 350, 50);
 				} else if (turnCounter == 5){
-					this.testMultiTyper.addText("You can still fix this,");
-					this.testMultiTyper.addText("Only if you want.");
+					this.testMultiTyper.addText("Even if you don't");
 				} else if (turnCounter == 6){ 
-					this.testMultiTyper.addText("I still think about Patrick.");
+					this.testMultiTyper.addText("But i guess that's just");
+					this.testMultiTyper.addText("what that is, a memory.");
 				} else if (turnCounter == 7){
-					this.testMultiTyper.addText("I wonder what life could ");
-					this.testMultiTyper.addText("have been like");
+					this.testMultiTyper.addText("do you know what it is like?");
+				} else if (turnCounter == 8){
+					this.testMultiTyper.addText("To live your life in");
+					this.testMultiTyper.addText("fear knowing its all");
+					this.testMultiTyper.addText("just going to be erased.");
+				} else if (turnCounter == 9){
+					this.testMultiTyper.addText("Eventually I just");
+					this.testMultiTyper.addText("stopped caring.");
+				} else if (turnCounter == 10){
+					this.testMultiTyper.addText("But after knowing");
+					this.testMultiTyper.addText("what happens next...");
+				} else if (turnCounter == 11){
+					this.testMultiTyper.addText("Well let's just say i'm");
+					this.testMultiTyper.addText("only doing this for your");
+					this.testMultiTyper.addText("sake and mine at this point.");
+				} else if (turnCounter == 12){
+					this.testMultiTyper.addText("Okay lets do it");
+					this.testMultiTyper.addText("for real");
+				} else if (turnCounter == 13){
+					this.testMultiTyper.addText("As i said before all this.");
+					this.testMultiTyper.addText("I was hoping we could be");
+					this.testMultiTyper.addText("friends");
+				} else if (turnCounter == 14){
+					this.testMultiTyper.addText("I assumed you would have");
+					this.testMultiTyper.addText("stop once you had what you");
+					this.testMultiTyper.addText("wanted.");
+					playSpace.invokeTransition(DisplayManager.getWidth()/2 - 600/2, 300, 400, 600, 50);
+				} else if (turnCounter == 15){
+					this.testMultiTyper.addText("You're just gonna make us");
+					this.testMultiTyper.addText("live on repeast like we're");
+					this.testMultiTyper.addText("in a sort of whirl pool.");
 				} else {
-					this.testMultiTyper.addText("I need more lines");
+					this.testMultiTyper.addText("This is it");
+					this.testMultiTyper.addText("Hell or High Water!");
 				}
 				this.testMultiTyper.show();
 			} 
@@ -253,7 +282,6 @@ public class MasterTurnController {
 			// Here the player will be dodging the projectiles spawned
 			enemyTurnHandler();
 
-			
 		} else if (turn == MIDDLE){
 			// Here Insert the dialogue that spongebob will have
 			
@@ -288,8 +316,7 @@ public class MasterTurnController {
 					this.player.setColor(new Vector3f(0,0,1));
 					masterProjectileController.addMulitSpiralProjectileSpawner(player.getX()-400, 706, 0f, 0f, 2f, 0, 0, 10f, 1, 32);
 					masterProjectileController.addMulitSpiralProjectileSpawner(player.getX()+400, 706, 0f, 0f, 2f, (float) Math.PI, 0, 10f, 1, 32);
-					//this.pMask.Activate();
-
+					this.pMask.Activate();
 				}else if (turnCounter == 1){
 					this.player.setColor(new Vector3f(1,0,0));
 					int i = 0;
@@ -297,8 +324,7 @@ public class MasterTurnController {
 						masterProjectileController.addJellyFishProjectile(10 * i, 128, 90, 10, player, 256, (float) (Math.random() * 360));
 						i++;
 					}
-					this.turnTimer = 120;
-					
+					this.turnTimer = 150;
 				} else if (turnCounter == 2){
 					this.player.setColor(new Vector3f(0,0,1));
 					masterProjectileController.addJellyFishProjectile(200, 570, 40, 128, 0, 150, 10);
@@ -318,46 +344,43 @@ public class MasterTurnController {
 					this.turnTimer = 70;
 					this.pMask.Deactivate();
 				} else if (turnCounter == 4){
-					this.player.setColor(new Vector3f(1,0,0));
-					int i = 0;
-					while (i < 5){
-						int j = 0;
-						while (j < 8){
-							masterProjectileController.addJellyFishProjectile(20 * i, 64, 90, 10, player, 256, 45 * j);
-							j++;
-						}
-						i++;
-					}
-					this.turnTimer = 120;
+					// This one has gravity reverse
+					masterProjectileController.addMulitSpiralProjectileSpawner(player.getX()-400-16, 706, 0f, 0f, 1f, 0, 0, 15f, 1, 32);
+					masterProjectileController.addMulitSpiralProjectileSpawner(player.getX()+400-16, 550, 0f, 0f, 1f, (float) Math.PI, 0, 15f, 1, 32);
+					this.pMask.Activate();
 				} else if (turnCounter == 5){
 					this.player.setColor(new Vector3f(0,0,1));
 					masterProjectileController.addMulitSpiralProjectileSpawner(200, 675, 0f, 0f, 1f, 0, 0, 15f, 1, 64);
+					masterProjectileController.addJellyFishProjectile(30, 128, 90, 10, player, 256, 90);
+					masterProjectileController.addJellyFishProjectile(60, 128, 90, 10, player, 256, 90);
+					masterProjectileController.addJellyFishProjectile(90, 128, 90, 10, player, 256, 90);
 					this.pMask.Activate();
 				} else if (turnCounter == 6){
 					// This one has gravity reverse
-					masterProjectileController.addMulitSpiralProjectileSpawner(player.getX()-400, 706, 0f, 0f, 1f, 0, 0, 15f, 1, 32);
-					masterProjectileController.addMulitSpiralProjectileSpawner(player.getX()+400, 550, 0f, 0f, 1f, (float) Math.PI, 0, 15f, 1, 32);
+					this.player.setColor(new Vector3f(0,0,1));
+					masterProjectileController.addMulitSpiralProjectileSpawner(player.getX()-400-16, 675, 0f, 0f, 1f, 0, 0, 15f, 1, 64);
+					masterProjectileController.addMulitSpiralProjectileSpawner(player.getX()+400-16, 550, 0f, 0f, 1f, (float) Math.PI, 0, 15f, 1, 64);
 					this.pMask.Activate();
 				} else if (turnCounter == 7) {
 					this.player.setColor(new Vector3f(0,0,1));
-					masterProjectileController.addMulitSpiralProjectileSpawner(player.getX()-400, 675, 0f, 0f, 1f, 0, 0, 15f, 1, 64);
-					masterProjectileController.addMulitSpiralProjectileSpawner(player.getX()+400, 675, 0f, 0f, 1f, (float) Math.PI, 0, 15f, 1, 64);
+					masterProjectileController.addMulitSpiralProjectileSpawner(player.getX()-400-16, 675, 0f, 0f, 1f, 0, 0, 15f, 1, 64);
+					masterProjectileController.addMulitSpiralProjectileSpawner(player.getX()+400-16, 675, 0f, 0f, 1f, (float) Math.PI, 0, 15f, 1, 64);
 					this.pMask.Activate();
 				} else if (turnCounter == 8){
-					// This one has gravity reverse
 					this.player.setColor(new Vector3f(0,0,1));
-					masterProjectileController.addMulitSpiralProjectileSpawner(player.getX()-400, 675, 0f, 0f, 1f, 0, 0, 15f, 1, 64);
-					masterProjectileController.addMulitSpiralProjectileSpawner(player.getX()+400, 550, 0f, 0f, 1f, (float) Math.PI, 0, 15f, 1, 64);
-					this.pMask.Activate();
+					this.turnTimer = 200;
+					masterProjectileController.addMulitSpiralProjectileSpawner(500, 300, 0f, 0f, 1f, (float) (Math.PI/2), 0, 15f, 1, 64);			
+					masterProjectileController.addMulitSpiralProjectileSpawner(850, 400, 0f, 0f, 1f, (float) Math.PI, 0, 15f, 1, 64); 	
+					masterProjectileController.addMulitSpiralProjectileSpawner(700+32, 750, 0f, 0f, 1f, (float) (3*Math.PI/2), 0, 15f, 1, 64);
+					masterProjectileController.addMulitSpiralProjectileSpawner(400, 692-64, 0f, 0f, 1f, 0, 0, 15f, 1, 64);	
 				} else if (turnCounter == 9){
 					this.player.setColor(new Vector3f(0,0,1));
-					masterProjectileController.addMulitSpiralProjectileSpawner(player.getX()-400, 675, 0f, 0f, 1f, 0, 0, 15f, 1, 64);
-					masterProjectileController.addMulitSpiralProjectileSpawner(player.getX()+400, 675, 0f, 0f, 1f, (float) Math.PI, 0, 15f, 1, 64);
-					masterProjectileController.addMulitSpiralProjectileSpawner(player.getX()+400, 550, 0f, 0f, 1f, (float) Math.PI, 0, 15f, 1, 64);
-					masterProjectileController.addMulitSpiralProjectileSpawner(player.getX()-400, 550, 0f, 0f, 1f, 0, 0, 15f, 1, 64);
+					masterProjectileController.addMulitSpiralProjectileSpawner(player.getX()-400-16, 675, 0f, 0f, 1f, 0, 0, 15f, 1, 64);
+					masterProjectileController.addMulitSpiralProjectileSpawner(player.getX()+400-16, 675, 0f, 0f, 1f, (float) Math.PI, 0, 15f, 1, 64);
+					masterProjectileController.addMulitSpiralProjectileSpawner(player.getX()+400-16, 550, 0f, 0f, 1f, (float) Math.PI, 0, 15f, 1, 64);
+					masterProjectileController.addMulitSpiralProjectileSpawner(player.getX()-400-16, 550, 0f, 0f, 1f, 0, 0, 15f, 1, 64);
 					this.pMask.Activate();
-				} else if (turnCounter == 10) {
-					
+				} else if (turnCounter == 10) {		
 					this.player.setColor(new Vector3f(1,0,0));
 					int i = 0;
 					int limit = 20;
@@ -365,7 +388,7 @@ public class MasterTurnController {
 						masterProjectileController.addExplosionProjectileSpawner((float) (Math.random() * 1200), (float) (Math.random() * 400), (float) (Math.random() * 50), 0, 20, 32);
 						i += 1;
 					}
-					this.turnTimer = 50;
+					this.turnTimer = 80;
 					this.pMask.Deactivate();
 				} else if (turnCounter == 11){
 					this.player.setColor(new Vector3f(1,0,0));
@@ -378,8 +401,40 @@ public class MasterTurnController {
 					masterProjectileController.addMulitSpiralProjectileSpawner(1280, 75, 1f, (float) Math.PI, 1f, 0f, 17, 1f, 2, 64);
 					this.pMask.Deactivate();
 				} else if (turnCounter == 13){
-					this.player.setColor(new Vector3f(0,0,1));
-					masterProjectileController.addMulitSpiralProjectileSpawner(200, 706, 0f, 0f, 1f, 0, 0, 15f, 1, 32);
+					this.player.setColor(new Vector3f(1,0,0));
+					masterProjectileController.addMulitSpiralProjectileSpawner(0, 75, 0.5f, 0f, 1f, 0f, 17, 1f, 3, 32);
+					masterProjectileController.addMulitSpiralProjectileSpawner(1280, 75, 0.5f, (float) Math.PI, 1f, 0f, 17, 1f, 3, 32);
+					this.pMask.Deactivate();
+				} else if (turnCounter == 14){
+					this.player.setColor(new Vector3f(1,0,0));
+					int i = 0;
+					while (i < 5){
+						int j = 0;
+						while (j < 8){
+							masterProjectileController.addJellyFishProjectile(20 * i, 64, 90, 10, player, 256, 45 * j);
+							j++;
+						}
+						i++;
+					}
+					this.turnTimer = 120;
+				} else if (turnCounter == 15){
+					this.player.setColor(new Vector3f(1,0,0));
+					int i = 0;
+					while (i < 12){
+						masterProjectileController.addJellyFishProjectile(10 * i, 128, 90, 10, player, 256, (float) (Math.random() * 360));
+						i++;
+					}
+					this.turnTimer = 150;
+				} else {
+					this.player.setColor(new Vector3f(1,0,0));
+					int i = 0;
+					int limit = 20;
+					while (i < limit){
+						masterProjectileController.addExplosionProjectileSpawner((float) (Math.random() * 1200), (float) (Math.random() * 400), (float) (Math.random() * 50), 0, 20, 32);
+						i += 1;
+					}
+					this.turnTimer = 50;
+					this.pMask.Deactivate();
 				}
 				
 				this.testMultiTyper.hide();
@@ -506,11 +561,14 @@ public class MasterTurnController {
 			float d = distance(player, projectiles.get(i));
 			if (2*d< projectiles.get(i).size + player.size){					// TODO fix collision (It's a bit weird)
 				//System.out.println("hit");									// It seems to detect a collision when there isn't really one there.
-				if (hitTimer < 0){
+				if (hitSoundTimer < 0){
 					playerHitSFX.play(soulHitBuffer);
+					hitSoundTimer = 2;
+				}
+				if (hitTimer < 0){
+					player.decrementHealth();
 					hitTimer = HITDELAY;
 				}
-				player.decrementHealth();
 				return;
 			}
 		}
@@ -554,7 +612,7 @@ public class MasterTurnController {
 		turnTimer -= Clock.Delta();
 		
 		// change player gravity direction while in the middle of dodging projectiles
-		if (turnCounter == 8 || turnCounter == 6){
+		if (turnCounter == 4 || turnCounter == 6){
 			if (turnTimer < 75 && this.player.getGravityDirection() != this.player.UP){
 				this.player.setGravityDirection(this.player.UP);
 				this.player.gravity = 5;
@@ -563,12 +621,34 @@ public class MasterTurnController {
 			}
 		}
 		
+		if (turnCounter == 8){
+			
+			if (turnTimer < 50 && this.player.getGravityDirection() == this.player.LEFT){
+				this.player.setGravityDirection(this.player.RIGHT);
+				this.player.gravity = 5;
+				this.player.playSlamSFXOnNextChange();
+				this.SB.playAnimationLeft();
+			} else if (turnTimer < 100 && this.player.getGravityDirection() == this.player.UP){
+				this.player.setGravityDirection(this.player.LEFT);
+				this.player.gravity = 5;
+				this.player.playSlamSFXOnNextChange();
+				this.SB.playAnimationLeft();
+			} else if (turnTimer < 150 && this.player.getGravityDirection() == this.player.DOWN){
+				this.player.setGravityDirection(this.player.UP);
+				this.player.gravity = 5;
+				this.player.playSlamSFXOnNextChange();
+				this.SB.playAnimationUp();
+			}
+		}
+		
 		// Switch back to the player turn
+		// REMOVE C KEY
 		if (Keyboard.isKeyDown(Keyboard.KEY_C) || turnTimer <= 0){
 			gameSetPlayerTurn();
 		} else {
 			masterProjectileController.update();
 			detectCollision(player, masterProjectileController);
+			hitSoundTimer -= Clock.Delta();
 			hitTimer -= Clock.Delta();
 		}
 	}
