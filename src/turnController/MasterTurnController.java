@@ -233,7 +233,7 @@ public class MasterTurnController {
 					this.testMultiTyper.addText("I remember a time");
 					this.testMultiTyper.addText("when i called");
 					this.testMultiTyper.addText("you friend...");
-					playSpace.invokeTransition(DisplayManager.getWidth()/2 - 300/2, 400, 300, 350, 50);
+					
 				} else if (turnCounter == 5){
 					this.testMultiTyper.addText("Even if you don't");
 				} else if (turnCounter == 6){ 
@@ -245,6 +245,7 @@ public class MasterTurnController {
 					this.testMultiTyper.addText("To live your life in");
 					this.testMultiTyper.addText("fear knowing its all");
 					this.testMultiTyper.addText("just going to be erased.");
+					playSpace.invokeTransition(DisplayManager.getWidth()/2 - 300/2, 400, 300, 350, 50);
 				} else if (turnCounter == 9){
 					this.testMultiTyper.addText("Eventually I just");
 					this.testMultiTyper.addText("stopped caring.");
