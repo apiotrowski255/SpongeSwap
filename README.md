@@ -39,7 +39,7 @@ User Experience:
 
 Controls: 
 - Why does wsad not work as expected when trying to choose an item - not very intuitive since almost every other menu option is controlled by regular wsad. LET ME CHOOSE UP AND DOWN TOO GODDAMN IT. A -= 1, D += 1, what she wants is W -= 2, S += 2
-- Up/down keys to change gravity while in blue state would have been nice to have known about earlier -> you are not suppose to know that.
+- Up/down keys to change gravity while in blue state would have been nice to have known about earlier -> you are not suppose to know that. -> FIXED
 
 
 Mechanics: 
@@ -61,6 +61,11 @@ Other:
 - No clear ending as to when each round finishes - this needs to be fixed because from a player perspective it's infuriating to have the round finish before all the bubbles/whatever disappear from the screen. LET THE SCREEN BE CLEAR BEFORE THE NEXT ROUND.  
 - Also no real way to hit spongebob - have I missed something because no matter where I hit enter in the sideways krabby patty slider, everything is missed. 
 -  have seen TODO re: collisions so won't comment since that's already been recognised
+
+Secondplayer2p feedback:
+-My only real complaint I got is when spongebob would shoot out his small bubbles they were sometimes a little to hard to see
+-> referring to bubble size 32. This could be fixed by increasing the size to say 48. 
+
 
 if version 1.2
 typo fixes:

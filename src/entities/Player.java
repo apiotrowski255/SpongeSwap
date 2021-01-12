@@ -173,6 +173,7 @@ public class Player extends Entity {
 			applyGravity(gravityDirection);								// Apply gravity
 
 			// Allows for changing gravity direction
+			/*
 			if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
 				setGravityDirection(UP);
 			}
@@ -185,6 +186,7 @@ public class Player extends Entity {
 			if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
 				setGravityDirection(RIGHT);
 			}
+			*/
 		}
 	}
 	
